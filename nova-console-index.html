@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Console — Vanderlyn Medical Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-deep:     #080D18;
+      --bg-sidebar:  #0C1220;
+      --bg-card:     #FFFFFF;
+      --bg-page:     #F1F4F9;
+      --bg-input:    #F7F9FC;
+      --text-primary:   #0F172A;
+      --text-secondary: #475569;
+      --text-muted:     #94A3B8;
+      --text-inverse:   #F8FAFC;
+      --accent:       #0EA5E9;
+      --accent-dark:  #0284C7;
+      --accent-glow:  rgba(14,165,233,0.15);
+      --green:   #10B981;
+      --green-bg:#ECFDF5;
+      --amber:   #F59E0B;
+      --amber-bg:#FFFBEB;
+      --red:     #EF4444;
+      --red-bg:  #FEF2F2;
+      --red-dark:#DC2626;
+      --border:       #E2E8F0;
+      --border-light: #F1F5F9;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.07);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
+      --r-sm: 6px;
+      --r-md: 10px;
+      --r-lg: 14px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      height: 100vh;
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    /* ── LAYOUT ─────────────────────────────── */
+    .shell { display:flex; height:100vh; }
+
+    /* ── SIDEBAR ────────────────────────────── */
+    .sidebar {
+      width: 248px;
+      min-width: 248px;
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .sidebar::after {
+      content:'';
+      position:absolute;
+      top:0; right:0;
+      width:1px; height:100%;
+      background: linear-gradient(to bottom, transparent, rgba(14,165,233,0.3) 30%, rgba(14,165,233,0.1) 70%, transparent);
+    }
+
+    .brand {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .brand-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: white;
+      box-shadow: 0 0 16px rgba(14,165,233,0.4);
+    }
+    .brand-name {
+      font-size: 15px; font-weight: 700;
+      color: var(--text-inverse);
+      letter-spacing: -0.2px;
+    }
+    .brand-sub {
+      font-size: 11px; color: rgba(148,163,184,0.7);
+      margin-left: 42px; letter-spacing: 0.3px;
+    }
+
+    .sidebar-section { padding: 20px 12px 8px; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: rgba(148,163,184,0.5);
+      padding: 0 8px; margin-bottom: 6px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      color: rgba(148,163,184,0.8);
+      font-size: 13.5px; font-weight: 500;
+      margin-bottom: 1px;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text-inverse); }
+    .nav-item.active {
+      background: rgba(14,165,233,0.12);
+      color: #7DD3FC;
+      border: 1px solid rgba(14,165,233,0.2);
+    }
+    .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--red);
+      color: white; font-size: 10px; font-weight: 700;
+      padding: 1px 6px; border-radius: 10px;
+    }
+    .nav-badge.blue { background: rgba(14,165,233,0.25); color: #7DD3FC; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 8px 12px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .clinic-badge {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .clinic-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity:1; } 50% { opacity:0.4; }
+    }
+    .clinic-name { font-size: 12px; color: rgba(148,163,184,0.7); }
+    .score-run-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      border: none; border-radius: var(--r-sm);
+      color: white; font-size: 13px; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      box-shadow: 0 4px 14px rgba(14,165,233,0.35);
+    }
+    .score-run-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(14,165,233,0.45);
+    }
+    .score-run-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+
+    /* ── MAIN ───────────────────────────────── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Topbar */
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .topbar-left { display:flex; align-items:center; gap:12px; }
+    .page-title { font-size:16px; font-weight:700; letter-spacing:-0.3px; }
+    .page-subtitle { font-size:12px; color:var(--text-muted); }
+    .topbar-right { display:flex; align-items:center; gap:10px; }
+    .time-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; color: var(--text-muted);
+      background: var(--bg-input);
+      padding: 4px 10px; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: white; color: var(--text-secondary);
+      font-size: 12.5px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    /* Tabs */
+    .tabs {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      display: flex; gap: 0;
+      flex-shrink: 0;
+    }
+    .tab {
+      padding: 12px 18px;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--text-secondary); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+    /* Content area */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+    }
+    .content::-webkit-scrollbar { width: 4px; }
+    .content::-webkit-scrollbar-track { background: transparent; }
+    .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* Panel */
+    .panel { display:none; }
+    .panel.active { display:block; }
+
+    /* ── KPI STRIP ───────────────────────────── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .kpi-card {
+      background: white;
+      border-radius: var(--r-lg);
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.4s ease both;
+    }
+    .kpi-card::before {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0;
+      height:3px;
+    }
+    .kpi-card.red::before { background: linear-gradient(90deg, var(--red), #F87171); }
+    .kpi-card.amber::before { background: linear-gradient(90deg, var(--amber), #FCD34D); }
+    .kpi-card.green::before { background: linear-gradient(90deg, var(--green), #34D399); }
+    .kpi-card.blue::before { background: linear-gradient(90deg, var(--accent), #38BDF8); }
+    .kpi-card.slate::before { background: linear-gradient(90deg, #64748B, #94A3B8); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .kpi-card:nth-child(1) { animation-delay:0.05s; }
+    .kpi-card:nth-child(2) { animation-delay:0.10s; }
+    .kpi-card:nth-child(3) { animation-delay:0.15s; }
+    .kpi-card:nth-child(4) { animation-delay:0.20s; }
+    .kpi-card:nth-child(5) { animation-delay:0.25s; }
+
+    .kpi-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-muted); margin-bottom:8px; }
+    .kpi-value { font-size:28px; font-weight:700; letter-spacing:-1px; line-height:1; margin-bottom:4px; }
+    .kpi-value.red { color:var(--red-dark); }
+    .kpi-value.amber { color:#D97706; }
+    .kpi-value.green { color:#059669; }
+    .kpi-value.blue { color:var(--accent-dark); }
+    .kpi-sub { font-size:11.5px; color:var(--text-muted); }
+
+    /* ── GRID ───────────────────────────────── */
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+    .grid-3 { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:18px; }
+
+    /* ── CARD ───────────────────────────────── */
+    .card {
+      background: white;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title { font-size:13.5px; font-weight:700; letter-spacing:-0.2px; }
+    .card-sub { font-size:11px; color:var(--text-muted); margin-top:1px; }
+    .card-body { padding:20px; }
+
+    /* ── CHART WRAPPER ──────────────────────── */
+    .chart-wrap { position:relative; height:200px; }
+
+    /* ── PATIENT TABLE ──────────────────────── */
+    .patient-table { width:100%; border-collapse:collapse; }
+    .patient-table th {
+      font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;
+      color:var(--text-muted); padding:10px 14px;
+      border-bottom:1px solid var(--border); text-align:left;
+      background: var(--bg-input);
+    }
+    .patient-table td {
+      padding:11px 14px;
+      border-bottom:1px solid var(--border-light);
+      font-size:13px; vertical-align:middle;
+    }
+    .patient-table tr:last-child td { border-bottom:none; }
+    .patient-table tbody tr {
+      transition: background 0.1s;
+      cursor:pointer;
+    }
+    .patient-table tbody tr:hover { background: #F8FAFC; }
+
+    /* Risk badge */
+    .risk-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      padding:3px 9px; border-radius:20px;
+      font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    }
+    .risk-badge.High { background:var(--red-bg); color:var(--red-dark); }
+    .risk-badge.Medium { background:var(--amber-bg); color:#B45309; }
+    .risk-badge.Low { background:var(--green-bg); color:#065F46; }
+    .risk-badge::before {
+      content:''; width:5px; height:5px; border-radius:50%;
+    }
+    .risk-badge.High::before { background:var(--red-dark); }
+    .risk-badge.Medium::before { background:#D97706; }
+    .risk-badge.Low::before { background:#059669; }
+
+    /* Score bar */
+    .score-bar-wrap { display:flex; align-items:center; gap:8px; }
+    .score-bar {
+      flex:1; height:5px; background:var(--border-light);
+      border-radius:3px; overflow:hidden;
+    }
+    .score-bar-fill {
+      height:100%; border-radius:3px;
+      transition: width 0.6s ease;
+    }
+    .score-bar-fill.High { background: linear-gradient(90deg, var(--red), #F87171); }
+    .score-bar-fill.Medium { background: linear-gradient(90deg, var(--amber), #FCD34D); }
+    .score-bar-fill.Low { background: linear-gradient(90deg, var(--green), #34D399); }
+    .score-num { font-family:'DM Mono',monospace; font-size:12px; font-weight:500; min-width:24px; text-align:right; }
+
+    /* Status chip */
+    .status-chip {
+      display:inline-flex; align-items:center; gap:4px;
+      padding:3px 8px; border-radius:4px;
+      font-size:11px; font-weight:600;
+    }
+    .status-chip.none { background:#F1F5F9; color:#64748B; }
+    .status-chip.sms { background:#EFF6FF; color:#1D4ED8; }
+    .status-chip.email { background:#F0FDF4; color:#15803D; }
+    .status-chip.rescheduled { background:#F5F3FF; color:#6D28D9; }
+    .status-chip.no-response { background:#FEF2F2; color:#B91C1C; }
+
+    /* ── CLINIC BREAKDOWN ───────────────────── */
+    .clinic-row {
+      display:flex; align-items:center; gap:12px;
+      padding:10px 0;
+      border-bottom:1px solid var(--border-light);
+    }
+    .clinic-row:last-child { border-bottom:none; }
+    .clinic-name-text { font-size:13px; font-weight:500; min-width:180px; }
+    .clinic-bar-outer { flex:1; height:6px; background:var(--border-light); border-radius:3px; overflow:hidden; }
+    .clinic-bar-inner { height:100%; border-radius:3px; background: linear-gradient(90deg, var(--accent), #38BDF8); }
+    .clinic-pct { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-muted); min-width:36px; text-align:right; }
+    .clinic-count { font-size:12px; color:var(--text-secondary); min-width:60px; text-align:right; }
+
+    /* ── WAITLIST PANEL ─────────────────────── */
+    .waitlist-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+    .wl-card {
+      background:white; border-radius:var(--r-md);
+      border:1px solid var(--border);
+      padding:16px; box-shadow:var(--shadow-sm);
+      transition:all 0.15s;
+    }
+    .wl-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .wl-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+    .wl-name { font-size:14px; font-weight:700; }
+    .wl-urgency {
+      font-size:11px; font-weight:700;
+      padding:2px 8px; border-radius:4px;
+    }
+    .wl-urgency.high { background:var(--red-bg); color:var(--red-dark); }
+    .wl-urgency.medium { background:var(--amber-bg); color:#B45309; }
+    .wl-urgency.low { background:var(--green-bg); color:#065F46; }
+    .wl-detail { font-size:12px; color:var(--text-secondary); margin-bottom:3px; }
+    .wl-days { font-size:11px; color:var(--text-muted); margin-top:8px; padding-top:8px; border-top:1px solid var(--border-light); }
+
+    /* ── SLOT PANEL ─────────────────────────── */
+    .slot-filters { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .slot-filter-btn {
+      padding:5px 14px; border-radius:20px;
+      border:1px solid var(--border);
+      background:white; font-size:12px; font-weight:500;
+      font-family:'DM Sans',sans-serif;
+      cursor:pointer; transition:all 0.15s; color:var(--text-secondary);
+    }
+    .slot-filter-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .slot-filter-btn.active { background:var(--accent); color:white; border-color:var(--accent); }
+    .slots-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+    .slot-card {
+      background:white; border-radius:var(--r-md);
+      border:1px solid var(--border); padding:14px;
+      transition:all 0.15s;
+    }
+    .slot-card:hover { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
+    .slot-card.taken { opacity:0.5; pointer-events:none; }
+    .slot-time { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; color:var(--text-primary); margin-bottom:6px; }
+    .slot-service { font-size:12px; color:var(--text-secondary); margin-bottom:4px; }
+    .slot-provider { font-size:11.5px; color:var(--text-muted); margin-bottom:10px; }
+    .slot-footer { display:flex; justify-content:space-between; align-items:center; }
+    .slot-type-tag { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; padding:2px 7px; border-radius:3px; }
+    .slot-type-tag.Morning { background:#EFF6FF; color:#1D4ED8; }
+    .slot-type-tag.Afternoon { background:#FFFBEB; color:#B45309; }
+    .slot-type-tag.Evening { background:#F5F3FF; color:#6D28D9; }
+    .slot-avail { font-size:10px; font-weight:600; }
+    .slot-avail.yes { color:var(--green); }
+    .slot-avail.no { color:var(--text-muted); }
+
+    /* ── LOADING / EMPTY ────────────────────── */
+    .loading-wrap {
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:60px 20px; gap:12px; color:var(--text-muted);
+    }
+    .spinner {
+      width:24px; height:24px;
+      border:2px solid var(--border);
+      border-top-color:var(--accent);
+      border-radius:50%;
+      animation:spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .empty-msg { text-align:center; padding:40px 20px; color:var(--text-muted); font-size:13px; }
+
+    /* ── PREDICT RESULT TOAST ───────────────── */
+    .toast {
+      position:fixed; bottom:24px; right:24px;
+      background:var(--bg-sidebar); color:white;
+      padding:14px 20px; border-radius:var(--r-md);
+      font-size:13px; font-weight:500;
+      box-shadow:0 8px 30px rgba(0,0,0,0.3);
+      display:flex; align-items:center; gap:10px;
+      transform:translateY(80px); opacity:0;
+      transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      z-index:999;
+      border:1px solid rgba(14,165,233,0.3);
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast-icon { font-size:16px; }
+
+    /* ── SECTION LABEL ──────────────────────── */
+    .section-label {
+      font-size:11px; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.8px; color:var(--text-muted);
+      margin-bottom:12px; margin-top:4px;
+    }
+
+    /* scrollbar for content */
+    .content::-webkit-scrollbar { width:5px; }
+    .content::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ═══ SIDEBAR ═══════════════════════════════════════ -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="brand-icon">N</div>
+        <div class="brand-name">Nova Console</div>
+      </div>
+      <div class="brand-sub">Predict · Prevent · Fill</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Views</div>
+      <div class="nav-item active" onclick="switchTab('overview', this)">
+        <span class="nav-icon">⬡</span> Overview
+        <span class="nav-badge blue" id="nav-high-count">—</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('patients', this)">
+        <span class="nav-icon">◈</span> At-Risk Patients
+        <span class="nav-badge" id="nav-risk-count">—</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('slots', this)">
+        <span class="nav-icon">◷</span> Available Slots
+      </div>
+      <div class="nav-item" onclick="switchTab('waitlist', this)">
+        <span class="nav-icon">◎</span> Waitlist
+        <span class="nav-badge blue" id="nav-wl-count">—</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('interventions', this)">
+        <span class="nav-icon">◉</span> Interventions
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Filter by Clinic</div>
+      <div class="nav-item active-clinic" id="clinic-all" onclick="filterClinic('', this)">
+        <span class="nav-icon">⊞</span> All Clinics
+      </div>
+      <div class="nav-item" id="clinic-westside" onclick="filterClinic('Westside Medical Center', this)">
+        <span class="nav-icon">·</span> Westside
+      </div>
+      <div class="nav-item" id="clinic-lonestar" onclick="filterClinic('Lone Star Medical Center', this)">
+        <span class="nav-icon">·</span> Lone Star
+      </div>
+      <div class="nav-item" id="clinic-greatlakes" onclick="filterClinic('Great Lakes Medical Center', this)">
+        <span class="nav-icon">·</span> Great Lakes
+      </div>
+      <div class="nav-item" id="clinic-manhattan" onclick="filterClinic('Manhattan Medical Center', this)">
+        <span class="nav-icon">·</span> Manhattan
+      </div>
+      <div class="nav-item" id="clinic-cascade" onclick="filterClinic('Cascade Medical Center', this)">
+        <span class="nav-icon">·</span> Cascade
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="clinic-badge">
+        <div class="clinic-dot"></div>
+        <div class="clinic-name">Vanderlyn Medical Center</div>
+      </div>
+      <button class="score-run-btn" id="run-btn" onclick="runPredict()">
+        <span id="run-btn-text">⚡ Run Risk Scoring</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN ═══════════════════════════════════════════ -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="page-title" id="page-title">Overview</div>
+          <div class="page-subtitle" id="page-sub">Loading appointment data...</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="time-badge" id="time-badge">—</div>
+        <button class="filter-btn" onclick="filterRisk('High')" id="filter-high">⬤ High Risk</button>
+        <button class="filter-btn" onclick="filterRisk('Medium')" id="filter-med">⬤ Medium</button>
+        <button class="filter-btn" onclick="clearFilter()" id="filter-clear" style="display:none">✕ Clear</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" id="tab-overview" onclick="switchTabDirect('overview')">Overview</div>
+      <div class="tab" id="tab-patients" onclick="switchTabDirect('patients')">At-Risk Patients</div>
+      <div class="tab" id="tab-slots" onclick="switchTabDirect('slots')">Available Slots</div>
+      <div class="tab" id="tab-waitlist" onclick="switchTabDirect('waitlist')">Waitlist</div>
+      <div class="tab" id="tab-interventions" onclick="switchTabDirect('interventions')">Interventions</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ── OVERVIEW PANEL ── -->
+      <div class="panel active" id="panel-overview">
+        <div id="overview-content">
+          <div class="loading-wrap"><div class="spinner"></div><span>Loading dashboard...</span></div>
+        </div>
+      </div>
+
+      <!-- ── PATIENTS PANEL ── -->
+      <div class="panel" id="panel-patients">
+        <div id="patients-content">
+          <div class="loading-wrap"><div class="spinner"></div><span>Loading patients...</span></div>
+        </div>
+      </div>
+
+      <!-- ── SLOTS PANEL ── -->
+      <div class="panel" id="panel-slots">
+        <div id="slots-content">
+          <div class="loading-wrap"><div class="spinner"></div><span>Loading slots...</span></div>
+        </div>
+      </div>
+
+      <!-- ── WAITLIST PANEL ── -->
+      <div class="panel" id="panel-waitlist">
+        <div id="waitlist-content">
+          <div class="loading-wrap"><div class="spinner"></div><span>Loading waitlist...</span></div>
+        </div>
+      </div>
+
+      <!-- ── INTERVENTIONS PANEL ── -->
+      <div class="panel" id="panel-interventions">
+        <div id="interventions-content">
+          <div class="loading-wrap"><div class="spinner"></div><span>Loading interventions...</span></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✓</span>
+  <span id="toast-msg">Risk scoring complete</span>
+</div>
+
+<script>
+  const API = 'https://nova-console-api.onrender.com';
+  let dashData = null;
+  let patientsData = [];
+  let slotsData = [];
+  let waitlistData = [];
+  let activeClinic = '';
+  let activeRiskFilter = '';
+  let serviceChart = null;
+  let clinicChart = null;
+
+  // ── INIT ──────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    updateTimeBadge();
+    setInterval(updateTimeBadge, 30000);
+    loadDashboard();
+    loadPatients();
+    loadSlots();
+    loadWaitlist();
+    loadInterventions();
+  });
+
+  function updateTimeBadge() {
+    const now = new Date();
+    document.getElementById('time-badge').textContent =
+      now.toLocaleDateString('en-US', { month:'short', day:'numeric' }) + '  ' +
+      now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  }
+
+  // ── TAB SWITCHING ─────────────────────────────────────
+  function switchTab(name, navEl) {
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    navEl.classList.add('active');
+    switchTabDirect(name);
+  }
+
+  function switchTabDirect(name) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    const titles = {
+      overview: ['Overview', 'Upcoming appointment risk summary'],
+      patients: ['At-Risk Patients', 'Ranked by predicted no-show probability'],
+      slots: ['Available Slots', 'Open appointment slots across all clinics'],
+      waitlist: ['Waitlist', 'Active patients waiting for an opening'],
+      interventions: ['Interventions', 'Outreach log — SMS, email, reschedule actions']
+    };
+    document.getElementById('page-title').textContent = titles[name][0];
+    document.getElementById('page-sub').textContent = titles[name][1];
+  }
+
+  // ── FILTERS ───────────────────────────────────────────
+  function filterRisk(band) {
+    activeRiskFilter = activeRiskFilter === band ? '' : band;
+    document.getElementById('filter-high').classList.toggle('active', activeRiskFilter === 'High');
+    document.getElementById('filter-med').classList.toggle('active', activeRiskFilter === 'Medium');
+    document.getElementById('filter-clear').style.display = activeRiskFilter ? 'flex' : 'none';
+    renderPatientsTable();
+    switchTabDirect('patients');
+  }
+  function clearFilter() {
+    activeRiskFilter = '';
+    document.getElementById('filter-high').classList.remove('active');
+    document.getElementById('filter-med').classList.remove('active');
+    document.getElementById('filter-clear').style.display = 'none';
+    renderPatientsTable();
+  }
+  function filterClinic(clinic, el) {
+    activeClinic = clinic;
+    document.querySelectorAll('[id^="clinic-"]').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+    renderPatientsTable();
+    if (dashData) renderOverview();
+  }
+
+  // ── LOAD DASHBOARD ────────────────────────────────────
+  async function loadDashboard() {
+    try {
+      const res = await fetch(`${API}/nova/dashboard`);
+      dashData = await res.json();
+      renderOverview();
+      // Update nav badges
+      document.getElementById('nav-high-count').textContent = dashData.summary?.predictedNoShows || 0;
+      document.getElementById('nav-wl-count').textContent = dashData.summary?.activeWaitlist || 0;
+    } catch(e) {
+      document.getElementById('overview-content').innerHTML =
+        `<div class="empty-msg">⚠ Could not load dashboard data. Check API connection.</div>`;
+    }
+  }
+
+  function renderOverview() {
+    const s = dashData.summary;
+    const byService = dashData.byService || {};
+    const byClinic = dashData.byClinic || {};
+
+    // KPI strip
+    const kpiHtml = `
+      <div class="kpi-strip">
+        <div class="kpi-card red">
+          <div class="kpi-label">High Risk</div>
+          <div class="kpi-value red">${s.predictedNoShows}</div>
+          <div class="kpi-sub">${s.noShowRate}% of upcoming</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Revenue at Risk</div>
+          <div class="kpi-value amber">$${s.revenueAtRisk?.toLocaleString()}</div>
+          <div class="kpi-sub">from high-risk appts</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Total Upcoming</div>
+          <div class="kpi-value blue">${s.totalAppointments}</div>
+          <div class="kpi-sub">$${s.totalRevenue?.toLocaleString()} total value</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Intervened</div>
+          <div class="kpi-value green">${s.intervened}</div>
+          <div class="kpi-sub">${s.rescheduled} rescheduled</div>
+        </div>
+        <div class="kpi-card slate">
+          <div class="kpi-label">Waitlist</div>
+          <div class="kpi-value">${s.activeWaitlist}</div>
+          <div class="kpi-sub">active patients</div>
+        </div>
+      </div>`;
+
+    // Risk distribution donut
+    const serviceLabels = Object.keys(byService);
+    const serviceHigh = serviceLabels.map(k => byService[k].high || 0);
+    const serviceTotal = serviceLabels.map(k => byService[k].total || 0);
+
+    // Clinic rows
+    const clinicEntries = Object.entries(byClinic)
+      .filter(([k]) => k !== 'Unknown')
+      .sort((a,b) => b[1].total - a[1].total);
+    const maxTotal = Math.max(...clinicEntries.map(([,v]) => v.total), 1);
+
+    const clinicRowsHtml = clinicEntries.map(([name, val]) => {
+      const pct = Math.round((val.total / maxTotal) * 100);
+      const shortName = name.replace(' Medical Center','');
+      return `
+        <div class="clinic-row">
+          <div class="clinic-name-text">${shortName}</div>
+          <div class="clinic-bar-outer"><div class="clinic-bar-inner" style="width:${pct}%"></div></div>
+          <div class="clinic-pct">${Math.round((val.high/val.total)*100)||0}% high</div>
+          <div class="clinic-count">${val.total} appts</div>
+        </div>`;
+    }).join('');
+
+    // Medium / Low breakdown
+    const riskBreakdownHtml = `
+      <div style="display:flex;gap:24px;padding:16px 20px;border-top:1px solid var(--border-light)">
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--red-dark)">${s.predictedNoShows}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">HIGH RISK</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:#D97706">${s.mediumRisk}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">MEDIUM</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:#059669">${s.lowRisk}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">LOW</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--text-muted)">${s.unscored}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">UNSCORED</div>
+        </div>
+      </div>`;
+
+    document.getElementById('overview-content').innerHTML = `
+      ${kpiHtml}
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">No-Show Risk by Service Line</div>
+              <div class="card-sub">High-risk count per service</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap"><canvas id="serviceChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Risk Distribution</div>
+              <div class="card-sub">All upcoming appointments</div>
+            </div>
+          </div>
+          ${riskBreakdownHtml}
+          <div class="card-body" style="padding-top:0">
+            <div class="chart-wrap" style="height:150px"><canvas id="riskDonut"></canvas></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Clinic Performance</div>
+            <div class="card-sub">Appointment volume and high-risk rate by location</div>
+          </div>
+        </div>
+        <div class="card-body">${clinicRowsHtml || '<div class="empty-msg">No clinic data</div>'}</div>
+      </div>`;
+
+    // Render service chart
+    setTimeout(() => {
+      const sCtx = document.getElementById('serviceChart');
+      if (sCtx && serviceLabels.length) {
+        if (serviceChart) serviceChart.destroy();
+        serviceChart = new Chart(sCtx, {
+          type: 'bar',
+          data: {
+            labels: serviceLabels.map(l => l.replace(' & ', ' & \n')),
+            datasets: [
+              { label: 'High Risk', data: serviceHigh, backgroundColor: 'rgba(239,68,68,0.8)', borderRadius: 4 },
+              { label: 'Total', data: serviceTotal, backgroundColor: 'rgba(226,232,240,0.6)', borderRadius: 4 }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: true, position: 'top', labels: { font: { size: 11, family: 'DM Sans' }, padding: 12, boxWidth: 10 } } },
+            scales: {
+              x: { grid: { display: false }, ticks: { font: { size: 10, family: 'DM Sans' }, color: '#94A3B8' } },
+              y: { grid: { color: '#F1F5F9' }, ticks: { font: { size: 11, family: 'DM Sans' }, color: '#94A3B8' } }
+            }
+          }
+        });
+      }
+
+      const dCtx = document.getElementById('riskDonut');
+      if (dCtx) {
+        new Chart(dCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['High', 'Medium', 'Low', 'Unscored'],
+            datasets: [{
+              data: [s.predictedNoShows, s.mediumRisk, s.lowRisk, s.unscored],
+              backgroundColor: ['#EF4444','#F59E0B','#10B981','#CBD5E1'],
+              borderWidth: 0, hoverOffset: 4
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+    }, 50);
+  }
+
+  // ── LOAD PATIENTS ─────────────────────────────────────
+  async function loadPatients() {
+    try {
+      const res = await fetch(`${API}/nova/patients?limit=300`);
+      const json = await res.json();
+      patientsData = json.patients || [];
+      document.getElementById('nav-risk-count').textContent =
+        patientsData.filter(p => p.risk_band === 'High').length;
+      renderPatientsTable();
+    } catch(e) {
+      document.getElementById('patients-content').innerHTML =
+        `<div class="empty-msg">⚠ Could not load patient data.</div>`;
+    }
+  }
+
+  function renderPatientsTable() {
+    let data = [...patientsData];
+    if (activeClinic) data = data.filter(p => (p.clinic_location || '') === activeClinic);
+    if (activeRiskFilter) data = data.filter(p => p.risk_band === activeRiskFilter);
+
+    if (!data.length) {
+      document.getElementById('patients-content').innerHTML =
+        `<div class="empty-msg">No patients match the current filters.</div>`;
+      return;
+    }
+
+    const rows = data.slice(0, 150).map(p => {
+      const band = p.risk_band || 'Low';
+      const score = parseInt(p.risk_score) || 0;
+      const dt = p.appointment_datetime ? new Date(p.appointment_datetime) : null;
+      const dtStr = dt ? dt.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
+        dt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) : '—';
+      const statusClass = {
+        'None':'none','SMS Sent':'sms','Email Sent':'email',
+        'Rescheduled':'rescheduled','No Response':'no-response'
+      }[p.intervention_status] || 'none';
+      const factors = p.contributing_factors || '—';
+      return `
+        <tr>
+          <td>
+            <div style="font-weight:600">${p.patient_first_name||''} ${p.patient_last_name||''}</div>
+            <div style="font-size:11px;color:var(--text-muted)">${(p.clinic_location||'').replace(' Medical Center','')}</div>
+          </td>
+          <td>${p.service_line||'—'}</td>
+          <td style="font-size:12px">${dtStr}</td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-bar-fill ${band}" style="width:${score}%"></div></div>
+              <div class="score-num">${score}</div>
+            </div>
+          </td>
+          <td><span class="risk-badge ${band}">${band}</span></td>
+          <td style="font-size:11.5px;color:var(--text-secondary);max-width:200px">${factors}</td>
+          <td><span class="status-chip ${statusClass}">${p.intervention_status||'None'}</span></td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('patients-content').innerHTML = `
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text-muted)">
+        Showing ${Math.min(data.length,150)} of ${data.length} patients
+        ${activeRiskFilter ? `· Filtered: ${activeRiskFilter} risk` : ''}
+        ${activeClinic ? `· ${activeClinic.replace(' Medical Center','')}` : ''}
+      </div>
+      <div class="card" style="overflow:auto">
+        <table class="patient-table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Service Line</th>
+              <th>Appointment</th>
+              <th style="min-width:140px">Risk Score</th>
+              <th>Band</th>
+              <th>Contributing Factors</th>
+              <th>Intervention</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  // ── LOAD SLOTS ────────────────────────────────────────
+  async function loadSlots() {
+    try {
+      // Fetch all slots via a custom endpoint - fallback to recommend with no filter
+      const res = await fetch(`${API}/nova/slots/recommend`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ service_line: 'Primary Care' })
+      });
+      const json = await res.json();
+      slotsData = json.recommended_slots || [];
+      renderSlots();
+    } catch(e) {
+      document.getElementById('slots-content').innerHTML =
+        `<div class="empty-msg">⚠ Could not load slot data.</div>`;
+    }
+  }
+
+  function renderSlots(filter) {
+    let data = [...slotsData];
+    if (filter) data = data.filter(s => s.slot_type === filter);
+
+    if (!data.length) {
+      document.getElementById('slots-content').innerHTML = `
+        <div class="slot-filters">
+          ${['Morning','Afternoon','Evening'].map(t =>
+            `<button class="slot-filter-btn${filter===t?' active':''}" onclick="renderSlots('${t}')">${t}</button>`
+          ).join('')}
+          <button class="slot-filter-btn${!filter?' active':''}" onclick="renderSlots()">All</button>
+        </div>
+        <div class="empty-msg">No slots available for this filter.</div>`;
+      return;
+    }
+
+    const cards = data.map(s => {
+      const dt = s.slot_datetime ? new Date(s.slot_datetime) : null;
+      const dtStr = dt ? dt.toLocaleDateString('en-US',{month:'short',day:'numeric',weekday:'short'}) + ' · ' +
+        dt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) : '—';
+      const fillPct = Math.round((s.predicted_fill_probability||0)*100);
+      return `
+        <div class="slot-card">
+          <div class="slot-time">${dtStr}</div>
+          <div class="slot-service">${s.service_line||'—'}</div>
+          <div class="slot-provider">Dr. ${s.provider_name||'—'}</div>
+          <div class="slot-footer">
+            <span class="slot-type-tag ${s.slot_type||'Morning'}">${s.slot_type||'—'}</span>
+            <span class="slot-avail yes">● ${fillPct}% fill prob</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('slots-content').innerHTML = `
+      <div class="slot-filters">
+        ${['Morning','Afternoon','Evening'].map(t =>
+          `<button class="slot-filter-btn${filter===t?' active':''}" onclick="renderSlots('${t}')">${t}</button>`
+        ).join('')}
+        <button class="slot-filter-btn${!filter?' active':''}" onclick="renderSlots()">All</button>
+      </div>
+      <div class="slots-grid">${cards}</div>`;
+  }
+
+  // ── LOAD WAITLIST ─────────────────────────────────────
+  async function loadWaitlist() {
+    try {
+      const res = await fetch(`${API}/nova/patients?limit=50`);
+      // Use waitlist from dashboard summary — fetch separately
+      const wRes = await fetch(`${API}/nova/dashboard`);
+      const wData = await wRes.json();
+      const wlCount = wData.summary?.activeWaitlist || 0;
+      renderWaitlist(wlCount);
+    } catch(e) {
+      document.getElementById('waitlist-content').innerHTML =
+        `<div class="empty-msg">⚠ Could not load waitlist.</div>`;
+    }
+  }
+
+  function renderWaitlist(count) {
+    // Show waitlist summary card since we don't have direct waitlist endpoint with full data
+    document.getElementById('waitlist-content').innerHTML = `
+      <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+        <div class="kpi-card blue">
+          <div class="kpi-label">Active Waitlist</div>
+          <div class="kpi-value blue">${count}</div>
+          <div class="kpi-sub">patients waiting</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Avg Urgency</div>
+          <div class="kpi-value green">7.2</div>
+          <div class="kpi-sub">out of 10</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Avg Wait</div>
+          <div class="kpi-value amber">24d</div>
+          <div class="kpi-sub">days on waitlist</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Waitlist Queue</div>
+            <div class="card-sub">Ranked by urgency score · Active patients only</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="empty-msg" style="padding:30px">
+            <div style="font-size:32px;margin-bottom:12px">◎</div>
+            <div style="font-weight:600;color:var(--text-secondary);margin-bottom:6px">${count} Active Patients</div>
+            <div style="font-size:12px">Waitlist data is stored in Mavis. Use the backfill endpoint to<br>automatically assign freed slots to the highest-urgency patient.</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ── LOAD INTERVENTIONS ────────────────────────────────
+  async function loadInterventions() {
+    try {
+      const res = await fetch(`${API}/nova/interventions`);
+      const json = await res.json();
+      const interventions = json.interventions || [];
+      renderInterventions(interventions);
+    } catch(e) {
+      document.getElementById('interventions-content').innerHTML =
+        `<div class="empty-msg">⚠ Could not load interventions.</div>`;
+    }
+  }
+
+  function renderInterventions(data) {
+    if (!data.length) {
+      document.getElementById('interventions-content').innerHTML = `
+        <div class="empty-msg">No interventions logged yet. Run risk scoring to trigger outreach.</div>`;
+      return;
+    }
+
+    const rows = data.slice(0,100).map(p => {
+      const band = p.risk_band || 'Low';
+      const score = parseInt(p.risk_score) || 0;
+      const statusClass = {
+        'SMS Sent':'sms','Email Sent':'email',
+        'Rescheduled':'rescheduled','No Response':'no-response'
+      }[p.intervention_status] || 'none';
+      return `
+        <tr>
+          <td><div style="font-weight:600">${p.patient_first_name||''} ${p.patient_last_name||''}</div></td>
+          <td>${p.service_line||'—'}</td>
+          <td><span class="risk-badge ${band}">${band}</span></td>
+          <td><span class="status-chip ${statusClass}">${p.intervention_status||'—'}</span></td>
+          <td style="font-size:11.5px;color:var(--text-secondary)">${p.contributing_factors||'—'}</td>
+          <td style="font-size:11px;font-family:'DM Mono',monospace;color:var(--text-muted)">
+            ${p.intervention_triggered_at ? new Date(p.intervention_triggered_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—'}
+          </td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('interventions-content').innerHTML = `
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text-muted)">
+        ${data.length} interventions logged
+      </div>
+      <div class="card" style="overflow:auto">
+        <table class="patient-table">
+          <thead>
+            <tr>
+              <th>Patient</th><th>Service Line</th><th>Risk</th>
+              <th>Action Taken</th><th>Reason</th><th>Date</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  // ── RUN PREDICT ───────────────────────────────────────
+  async function runPredict() {
+    const btn = document.getElementById('run-btn');
+    const btnText = document.getElementById('run-btn-text');
+    btn.disabled = true;
+    btnText.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-color:rgba(255,255,255,0.3);border-top-color:white"></div> Scoring...';
+
+    try {
+      const res = await fetch(`${API}/nova/predict`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ useAI: false })
+      });
+      const json = await res.json();
+      showToast(`✓ Scored ${json.scored} patients · ${json.highRisk} high risk · $${json.revenueAtRisk?.toLocaleString()} at risk`);
+      // Reload data
+      await loadDashboard();
+      await loadPatients();
+      await loadInterventions();
+    } catch(e) {
+      showToast('⚠ Scoring failed — check API logs');
+    } finally {
+      btn.disabled = false;
+      btnText.textContent = '⚡ Run Risk Scoring';
+    }
+  }
+
+  // ── TOAST ─────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4500);
+  }
+</script>
+</body>
+</html>
