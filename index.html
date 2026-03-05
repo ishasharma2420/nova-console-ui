@@ -1161,7 +1161,7 @@
         body: JSON.stringify({ useAI: false })
       });
       const json = await res.json();
-      showToast(`✓ Scored ${json.scored} patients · ${json.highRisk} high risk · $${json.revenueAtRisk?.toLocaleString()} at risk`);
+      showToast(`✓ Scored ${json.scored ?? json.total ?? '?'} patients · ${json.highRisk ?? json.high_risk ?? '?'} high risk · $${(json.revenueAtRisk ?? json.revenue_at_risk ?? 0).toLocaleString()} at risk`);
       // Reload data
       await loadDashboard();
       await loadPatients();
