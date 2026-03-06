@@ -715,7 +715,7 @@
     document.querySelectorAll('[id^="clinic-"]').forEach(e => e.classList.remove('active'));
     el.classList.add('active');
     renderPatientsTable();
-    if (dashData) renderOverview();
+    switchTabDirect('patients');
   }
 
   // ── LOAD DASHBOARD ────────────────────────────────────
@@ -1041,20 +1041,41 @@
   // ── LOAD WAITLIST ─────────────────────────────────────
   async function loadWaitlist() {
     try {
-      const res = await fetch(`${API}/nova/patients?limit=50`);
-      // Use waitlist from dashboard summary — fetch separately
-      const wRes = await fetch(`${API}/nova/dashboard`);
-      const wData = await wRes.json();
-      const wlCount = wData.summary?.activeWaitlist || 0;
-      renderWaitlist(wlCount);
+      const res = await fetch(`${API}/nova/waitlist`);
+      const json = await res.json();
+      waitlistData = json.waitlist || [];
+      renderWaitlist(json);
     } catch(e) {
       document.getElementById('waitlist-content').innerHTML =
         `<div class="empty-msg">⚠ Could not load waitlist.</div>`;
     }
   }
 
-  function renderWaitlist(count) {
-    // Show waitlist summary card since we don't have direct waitlist endpoint with full data
+  function renderWaitlist(json) {
+    const count = json.total || 0;
+    const avgUrgency = json.avgUrgency || '—';
+    const avgDays = json.avgDays || '—';
+    const waitlist = json.waitlist || [];
+
+    const urgencyClass = (score) => {
+      const s = parseInt(score) || 0;
+      if (s >= 8) return 'high';
+      if (s >= 5) return 'medium';
+      return 'low';
+    };
+
+    const cards = waitlist.map(w => `
+      <div class="wl-card">
+        <div class="wl-top">
+          <div class="wl-name">${w.patient_first_name||''} ${w.patient_last_name||''}</div>
+          <div class="wl-urgency ${urgencyClass(w.urgency_score)}">U${w.urgency_score}</div>
+        </div>
+        <div class="wl-detail">📋 ${w.preferred_service_line||'—'}</div>
+        <div class="wl-detail">🏥 ${(w.clinic_location||'').replace(' Medical Center','') || '—'}</div>
+        <div class="wl-detail">💳 ${w.insurance_type||'—'}</div>
+        <div class="wl-days">⏱ ${w.days_on_waitlist||0} days on waitlist · ${w.waitlist_status||'Active'}</div>
+      </div>`).join('');
+
     document.getElementById('waitlist-content').innerHTML = `
       <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
         <div class="kpi-card blue">
@@ -1064,30 +1085,17 @@
         </div>
         <div class="kpi-card green">
           <div class="kpi-label">Avg Urgency</div>
-          <div class="kpi-value green">7.2</div>
+          <div class="kpi-value green">${avgUrgency}</div>
           <div class="kpi-sub">out of 10</div>
         </div>
         <div class="kpi-card amber">
           <div class="kpi-label">Avg Wait</div>
-          <div class="kpi-value amber">24d</div>
+          <div class="kpi-value amber">${avgDays}d</div>
           <div class="kpi-sub">days on waitlist</div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Waitlist Queue</div>
-            <div class="card-sub">Ranked by urgency score · Active patients only</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="empty-msg" style="padding:30px">
-            <div style="font-size:32px;margin-bottom:12px">◎</div>
-            <div style="font-weight:600;color:var(--text-secondary);margin-bottom:6px">${count} Active Patients</div>
-            <div style="font-size:12px">Waitlist data is stored in Mavis. Use the backfill endpoint to<br>automatically assign freed slots to the highest-urgency patient.</div>
-          </div>
-        </div>
-      </div>`;
+      <div class="section-label">Waitlist Queue — Ranked by Urgency</div>
+      ${cards.length ? `<div class="waitlist-grid">${cards}</div>` : '<div class="empty-msg">No active waitlist patients.</div>'}`;
   }
 
   // ── LOAD INTERVENTIONS ────────────────────────────────
