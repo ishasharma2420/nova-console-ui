@@ -902,6 +902,27 @@
       const res = await fetch(`${API}/nova/patients?limit=300`);
       const json = await res.json();
       patientsData = json.patients || [];
+      const clinicCounts = {};
+      patientsData.forEach(p => {
+        const c = (p.clinic_location || '').replace(' Medical Center', '');
+        if (c) clinicCounts[c] = (clinicCounts[c] || 0) + 1;
+      });
+
+      // Update sidebar clinic labels with counts
+      const clinicMap = {
+        'Westside': 'clinic-westside',
+        'Lone Star': 'clinic-lonestar',
+        'Great Lakes': 'clinic-greatlakes',
+        'Manhattan': 'clinic-manhattan',
+        'Cascade': 'clinic-cascade'
+      };
+      Object.entries(clinicMap).forEach(([name, id]) => {
+        const el = document.getElementById(id);
+        if (el && clinicCounts[name]) {
+          el.innerHTML = `<span class="nav-icon">·</span> ${name} <span class="nav-badge blue">${clinicCounts[name]}</span>`;
+        }
+      });
+
       document.getElementById('nav-risk-count').textContent =
         patientsData.filter(p => p.risk_band === 'High').length;
       renderPatientsTable();
