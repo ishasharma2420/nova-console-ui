@@ -493,6 +493,176 @@
     /* scrollbar for content */
     .content::-webkit-scrollbar { width:5px; }
     .content::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+    /* ── KEBAB MENU (At-Risk Patients Action column) ──── */
+    .kebab-cell {
+      position: relative;
+    }
+    .kebab-btn {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid transparent;
+      border-radius: var(--r-sm);
+      background: transparent;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+    .kebab-btn:hover {
+      background: var(--bg-input);
+      border-color: var(--border);
+      color: var(--text-secondary);
+    }
+    .kebab-btn.open {
+      background: var(--accent-glow);
+      border-color: rgba(14,165,233,0.25);
+      color: var(--accent);
+    }
+
+    .kebab-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      z-index: 100;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow-lg);
+      min-width: 172px;
+      padding: 5px 0;
+      opacity: 0;
+      transform: translateY(-4px) scale(0.96);
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    .kebab-dropdown.open {
+      opacity: 1;
+      transform: translateY(4px) scale(1);
+      pointer-events: auto;
+    }
+    .kebab-dropdown-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 14px;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.1s;
+      border: none; background: none; width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      text-align: left;
+    }
+    .kebab-dropdown-item:hover {
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+    .kebab-dropdown-item .kebab-emoji {
+      font-size: 14px;
+      width: 18px; text-align: center;
+      flex-shrink: 0;
+    }
+    .kebab-dropdown-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 4px 0;
+    }
+
+    /* ── RESCHEDULE MODAL ──────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: white;
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-lg);
+      width: 380px;
+      max-width: 92vw;
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+    .modal-overlay.open .modal-box {
+      transform: translateY(0) scale(1);
+    }
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .modal-title {
+      font-size: 15px; font-weight: 700;
+      letter-spacing: -0.2px;
+      margin-bottom: 2px;
+    }
+    .modal-subtitle {
+      font-size: 12px; color: var(--text-muted);
+    }
+    .modal-body {
+      padding: 20px 24px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .modal-field-label {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .modal-input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text-primary);
+      background: var(--bg-input);
+      transition: border-color 0.15s;
+      outline: none;
+    }
+    .modal-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .modal-footer {
+      padding: 14px 24px 20px;
+      display: flex; justify-content: flex-end; gap: 8px;
+    }
+    .modal-btn {
+      padding: 8px 18px;
+      border-radius: var(--r-sm);
+      font-size: 13px; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-secondary);
+    }
+    .modal-btn:hover { border-color: var(--text-muted); }
+    .modal-btn.primary {
+      background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      color: white;
+      border: none;
+      box-shadow: 0 2px 8px rgba(14,165,233,0.3);
+    }
+    .modal-btn.primary:hover {
+      box-shadow: 0 4px 14px rgba(14,165,233,0.4);
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
@@ -642,6 +812,30 @@
   <span id="toast-msg">Risk scoring complete</span>
 </div>
 
+<!-- Reschedule Modal -->
+<div class="modal-overlay" id="reschedule-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Reschedule Appointment</div>
+      <div class="modal-subtitle" id="modal-patient-name">—</div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-field-label">New Date</div>
+        <input type="date" class="modal-input" id="modal-date" />
+      </div>
+      <div>
+        <div class="modal-field-label">New Time</div>
+        <input type="time" class="modal-input" id="modal-time" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn" onclick="closeRescheduleModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="confirmReschedule()">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const API = 'https://nova-console-api.onrender.com';
   let dashData = null;
@@ -653,6 +847,10 @@
   let serviceChart = null;
   let clinicChart = null;
 
+  // Kebab / action state
+  let openKebabIdx = null;
+  let rescheduleTarget = null; // { rowIdx, patientName }
+
   // ── INIT ──────────────────────────────────────────────
   window.addEventListener('DOMContentLoaded', () => {
     updateTimeBadge();
@@ -662,6 +860,20 @@
     loadSlots();
     loadWaitlist();
     loadInterventions();
+  });
+
+  // Close kebab dropdown on any outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.kebab-cell')) {
+      closeAllKebabs();
+    }
+  });
+
+  // Close modal on overlay click
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'reschedule-modal') {
+      closeRescheduleModal();
+    }
   });
 
   function updateTimeBadge() {
@@ -718,13 +930,86 @@
     switchTabDirect('patients');
   }
 
+  // ── KEBAB MENU LOGIC ──────────────────────────────────
+  function closeAllKebabs() {
+    document.querySelectorAll('.kebab-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.kebab-btn.open').forEach(b => b.classList.remove('open'));
+    openKebabIdx = null;
+  }
+
+  function toggleKebab(idx, e) {
+    e.stopPropagation();
+    const btn = document.getElementById('kebab-btn-' + idx);
+    const dd = document.getElementById('kebab-dd-' + idx);
+    if (openKebabIdx === idx) {
+      closeAllKebabs();
+      return;
+    }
+    closeAllKebabs();
+    btn.classList.add('open');
+    dd.classList.add('open');
+    openKebabIdx = idx;
+  }
+
+  function handleAction(action, idx) {
+    closeAllKebabs();
+    const name = document.getElementById('kebab-dd-' + idx).dataset.name;
+    if (action === 'call') {
+      showToast('📞 Calling ' + name + '...');
+    } else if (action === 'sms') {
+      showToast('💬 SMS sent to ' + name);
+    } else if (action === 'email') {
+      showToast('✉️ Email sent to ' + name);
+    } else if (action === 'reschedule') {
+      openRescheduleModal(idx, name);
+    }
+  }
+
+  // ── RESCHEDULE MODAL ──────────────────────────────────
+  function openRescheduleModal(rowIdx, patientName) {
+    rescheduleTarget = { rowIdx, patientName };
+    document.getElementById('modal-patient-name').textContent = patientName;
+    // Default date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('modal-date').value = tomorrow.toISOString().split('T')[0];
+    document.getElementById('modal-time').value = '09:00';
+    document.getElementById('reschedule-modal').classList.add('open');
+  }
+
+  function closeRescheduleModal() {
+    document.getElementById('reschedule-modal').classList.remove('open');
+    rescheduleTarget = null;
+  }
+
+  function confirmReschedule() {
+    if (!rescheduleTarget) return;
+    const dateVal = document.getElementById('modal-date').value;
+    const timeVal = document.getElementById('modal-time').value;
+    if (!dateVal || !timeVal) {
+      showToast('⚠ Please select both date and time');
+      return;
+    }
+    const dt = new Date(dateVal + 'T' + timeVal);
+    const formatted = dt.toLocaleDateString('en-US', { month:'short', day:'numeric' }) + ' ' +
+      dt.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+
+    // Update the appointment cell in the table row
+    const apptCell = document.getElementById('appt-cell-' + rescheduleTarget.rowIdx);
+    if (apptCell) {
+      apptCell.textContent = formatted;
+    }
+
+    showToast('🔄 Appointment rescheduled for ' + rescheduleTarget.patientName + ' to ' + formatted);
+    closeRescheduleModal();
+  }
+
   // ── LOAD DASHBOARD ────────────────────────────────────
   async function loadDashboard() {
     try {
       const res = await fetch(`${API}/nova/dashboard`);
       dashData = await res.json();
       renderOverview();
-      // Update nav badges
       document.getElementById('nav-high-count').textContent = dashData.summary?.predictedNoShows || 0;
       document.getElementById('nav-wl-count').textContent = dashData.summary?.activeWaitlist || 0;
     } catch(e) {
@@ -738,7 +1023,6 @@
     const byService = dashData.byService || {};
     const byClinic = dashData.byClinic || {};
 
-    // KPI strip
     const kpiHtml = `
       <div class="kpi-strip">
         <div class="kpi-card red">
@@ -768,12 +1052,10 @@
         </div>
       </div>`;
 
-    // Risk distribution donut
     const serviceLabels = Object.keys(byService);
     const serviceHigh = serviceLabels.map(k => byService[k].high || 0);
     const serviceTotal = serviceLabels.map(k => byService[k].total || 0);
 
-    // Clinic rows
     const clinicEntries = Object.entries(byClinic)
       .filter(([k]) => k !== 'Unknown')
       .sort((a,b) => b[1].total - a[1].total);
@@ -791,7 +1073,6 @@
         </div>`;
     }).join('');
 
-    // Medium / Low breakdown
     const riskBreakdownHtml = `
       <div style="display:flex;gap:24px;padding:16px 20px;border-top:1px solid var(--border-light)">
         <div style="text-align:center">
@@ -849,7 +1130,6 @@
         <div class="card-body">${clinicRowsHtml || '<div class="empty-msg">No clinic data</div>'}</div>
       </div>`;
 
-    // Render service chart
     setTimeout(() => {
       const sCtx = document.getElementById('serviceChart');
       if (sCtx && serviceLabels.length) {
@@ -908,7 +1188,6 @@
         if (c) clinicCounts[c] = (clinicCounts[c] || 0) + 1;
       });
 
-      // Update sidebar clinic labels with counts
       const clinicMap = {
         'Westside': 'clinic-westside',
         'Lone Star': 'clinic-lonestar',
@@ -943,25 +1222,22 @@
       return;
     }
 
-    const rows = data.slice(0, 150).map(p => {
+    const rows = data.slice(0, 150).map((p, idx) => {
       const band = p.risk_band || 'Low';
       const score = parseInt(p.risk_score) || 0;
       const dt = p.appointment_datetime ? new Date(p.appointment_datetime) : null;
       const dtStr = dt ? dt.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
         dt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) : '—';
-      const statusClass = {
-        'None':'none','SMS Sent':'sms','Email Sent':'email',
-        'Rescheduled':'rescheduled','No Response':'no-response'
-      }[p.intervention_status] || 'none';
       const factors = p.contributing_factors || '—';
+      const fullName = (p.patient_first_name||'') + ' ' + (p.patient_last_name||'');
       return `
         <tr>
           <td>
-            <div style="font-weight:600">${p.patient_first_name||''} ${p.patient_last_name||''}</div>
+            <div style="font-weight:600">${fullName}</div>
             <div style="font-size:11px;color:var(--text-muted)">${(p.clinic_location||'').replace(' Medical Center','')}</div>
           </td>
           <td>${p.service_line||'—'}</td>
-          <td style="font-size:12px">${dtStr}</td>
+          <td style="font-size:12px" id="appt-cell-${idx}">${dtStr}</td>
           <td>
             <div class="score-bar-wrap">
               <div class="score-bar"><div class="score-bar-fill ${band}" style="width:${score}%"></div></div>
@@ -970,7 +1246,24 @@
           </td>
           <td><span class="risk-badge ${band}">${band}</span></td>
           <td style="font-size:11.5px;color:var(--text-secondary);max-width:200px">${factors}</td>
-          <td><span class="status-chip ${statusClass}">${p.intervention_status||'None'}</span></td>
+          <td class="kebab-cell">
+            <button class="kebab-btn" id="kebab-btn-${idx}" onclick="toggleKebab(${idx}, event)" title="Actions">⋮</button>
+            <div class="kebab-dropdown" id="kebab-dd-${idx}" data-name="${fullName.replace(/"/g, '&quot;')}">
+              <button class="kebab-dropdown-item" onclick="handleAction('call', ${idx})">
+                <span class="kebab-emoji">📞</span> Call
+              </button>
+              <button class="kebab-dropdown-item" onclick="handleAction('sms', ${idx})">
+                <span class="kebab-emoji">💬</span> Send SMS
+              </button>
+              <button class="kebab-dropdown-item" onclick="handleAction('email', ${idx})">
+                <span class="kebab-emoji">✉️</span> Send Email
+              </button>
+              <div class="kebab-dropdown-divider"></div>
+              <button class="kebab-dropdown-item" onclick="handleAction('reschedule', ${idx})">
+                <span class="kebab-emoji">🔄</span> Reschedule
+              </button>
+            </div>
+          </td>
         </tr>`;
     }).join('');
 
@@ -990,7 +1283,7 @@
               <th style="min-width:140px">Risk Score</th>
               <th>Band</th>
               <th>Contributing Factors</th>
-              <th>Intervention</th>
+              <th style="width:56px;text-align:center">Action</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -1001,7 +1294,6 @@
   // ── LOAD SLOTS ────────────────────────────────────────
   async function loadSlots() {
     try {
-      // Fetch all slots via a custom endpoint - fallback to recommend with no filter
       const res = await fetch(`${API}/nova/slots/recommend`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
@@ -1191,7 +1483,6 @@
       });
       const json = await res.json();
       showToast(`✓ Scored ${json.scored ?? json.total ?? '?'} patients · ${json.highRisk ?? json.high_risk ?? '?'} high risk · $${(json.revenueAtRisk ?? json.revenue_at_risk ?? 0).toLocaleString()} at risk`);
-      // Reload data
       await loadDashboard();
       await loadPatients();
       await loadInterventions();
@@ -1204,11 +1495,13 @@
   }
 
   // ── TOAST ─────────────────────────────────────────────
+  let toastTimer = null;
   function showToast(msg) {
     const t = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 4500);
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
   }
 </script>
 </body>
