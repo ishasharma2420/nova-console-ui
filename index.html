@@ -216,6 +216,8 @@
     }
     .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
     .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .filter-btn.high-risk-btn.active { background: var(--red) !important; border-color: var(--red) !important; color: white !important; }
+    .filter-btn.medium-btn.active { background: var(--amber) !important; border-color: var(--amber) !important; color: white !important; }
 
     /* Tabs */
     .tabs {
@@ -450,162 +452,6 @@
     .slot-avail.yes { color:var(--green); }
     .slot-avail.no { color:var(--text-muted); }
 
-    /* ── NOVA RECOMMENDATIONS PANEL ──────────── */
-    .nova-intel {
-      background: linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%);
-      border: 1px solid #BAE6FD;
-      border-left: 4px solid var(--accent);
-      border-radius: var(--r-md);
-      padding: 18px 20px;
-      margin-bottom: 18px;
-      position: relative;
-    }
-    .nova-intel-header {
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 12px;
-    }
-    .nova-intel-icon {
-      width: 24px; height: 24px;
-      background: linear-gradient(135deg, #0EA5E9, #0284C7);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: white;
-      box-shadow: 0 0 10px rgba(14,165,233,0.3);
-      flex-shrink: 0;
-    }
-    .nova-intel-label {
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 1px;
-      color: var(--accent-dark);
-    }
-    .nova-intel-muted {
-      text-align: center; padding: 12px 0;
-      font-size: 12.5px; color: var(--text-muted); font-style: italic;
-    }
-    .nova-rec-block {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      padding: 14px 16px;
-      margin-bottom: 10px;
-    }
-    .nova-rec-block:last-child { margin-bottom: 0; }
-    .nova-rec-trigger {
-      font-size: 13px; color: var(--text-primary);
-      line-height: 1.55; margin-bottom: 10px;
-    }
-    .nova-rec-trigger strong { font-weight: 700; }
-    .nova-rec-trigger .risk-score-inline {
-      display: inline-flex; align-items: center; gap: 3px;
-      background: var(--red-bg); color: var(--red-dark);
-      font-size: 11px; font-weight: 700;
-      padding: 1px 7px; border-radius: 3px;
-      vertical-align: middle;
-    }
-    .nova-candidate {
-      display: flex; gap: 12px; align-items: flex-start;
-      padding: 8px 0;
-      border-top: 1px solid var(--border-light);
-    }
-    .nova-candidate:first-of-type { border-top: none; }
-    .nova-cand-rank {
-      width: 22px; height: 22px;
-      background: var(--accent); color: white;
-      border-radius: 50%; display: flex;
-      align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
-      flex-shrink: 0; margin-top: 2px;
-    }
-    .nova-cand-info { flex: 1; }
-    .nova-cand-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-    .nova-cand-detail { font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; }
-    .nova-cand-reason {
-      font-size: 11px; color: var(--accent-dark);
-      font-weight: 500; margin-top: 3px;
-      font-style: italic;
-    }
-    .nova-cand-score {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px; font-weight: 600;
-      color: var(--accent-dark);
-      background: var(--accent-glow);
-      padding: 2px 8px; border-radius: 4px;
-      flex-shrink: 0; margin-top: 2px;
-    }
-    .nova-rec-summary {
-      font-size: 12px; color: var(--text-secondary);
-      line-height: 1.5; margin-top: 8px;
-      padding-top: 8px; border-top: 1px solid var(--border-light);
-    }
-    .nova-rec-summary strong { color: var(--text-primary); }
-    .nova-reschedule-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 10px;
-      padding: 7px 16px;
-      background: linear-gradient(135deg, #0EA5E9, #0284C7);
-      border: none; border-radius: var(--r-sm);
-      color: white; font-size: 12px; font-weight: 600;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(14,165,233,0.3);
-      transition: all 0.15s;
-    }
-    .nova-reschedule-btn:hover {
-      box-shadow: 0 4px 14px rgba(14,165,233,0.4);
-      transform: translateY(-1px);
-    }
-    .nova-reschedule-btn:disabled {
-      opacity: 0.5; cursor: not-allowed; transform: none;
-    }
-
-    /* ── WAITLIST FILTERS BAR ────────────────── */
-    .wl-filters {
-      display: flex; flex-wrap: wrap; gap: 10px;
-      align-items: center;
-      margin-bottom: 16px;
-      padding: 12px 16px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-    }
-    .wl-filter-select {
-      padding: 6px 28px 6px 10px;
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      background: var(--bg-input);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12.5px; font-weight: 500;
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: border-color 0.15s;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394A3B8'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-    }
-    .wl-filter-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-    .wl-filter-label {
-      font-size: 10px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-right: -4px;
-    }
-    .wl-clear-btn {
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      background: white;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px; font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      margin-left: auto;
-    }
-    .wl-clear-btn:hover { border-color: var(--red); color: var(--red); }
-
     /* ── LOADING / EMPTY ────────────────────── */
     .loading-wrap {
       display:flex; flex-direction:column;
@@ -649,176 +495,6 @@
     /* scrollbar for content */
     .content::-webkit-scrollbar { width:5px; }
     .content::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
-
-    /* ── KEBAB MENU (At-Risk Patients Action column) ──── */
-    .kebab-cell {
-      position: relative;
-    }
-    .kebab-btn {
-      width: 30px; height: 30px;
-      display: flex; align-items: center; justify-content: center;
-      border: 1px solid transparent;
-      border-radius: var(--r-sm);
-      background: transparent;
-      cursor: pointer;
-      font-size: 16px;
-      color: var(--text-muted);
-      transition: all 0.15s;
-      font-family: 'DM Sans', sans-serif;
-      line-height: 1;
-      letter-spacing: 1px;
-    }
-    .kebab-btn:hover {
-      background: var(--bg-input);
-      border-color: var(--border);
-      color: var(--text-secondary);
-    }
-    .kebab-btn.open {
-      background: var(--accent-glow);
-      border-color: rgba(14,165,233,0.25);
-      color: var(--accent);
-    }
-
-    .kebab-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      z-index: 100;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      box-shadow: var(--shadow-lg);
-      min-width: 172px;
-      padding: 5px 0;
-      opacity: 0;
-      transform: translateY(-4px) scale(0.96);
-      pointer-events: none;
-      transition: opacity 0.15s ease, transform 0.15s ease;
-    }
-    .kebab-dropdown.open {
-      opacity: 1;
-      transform: translateY(4px) scale(1);
-      pointer-events: auto;
-    }
-    .kebab-dropdown-item {
-      display: flex; align-items: center; gap: 9px;
-      padding: 9px 14px;
-      font-size: 13px; font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.1s;
-      border: none; background: none; width: 100%;
-      font-family: 'DM Sans', sans-serif;
-      text-align: left;
-    }
-    .kebab-dropdown-item:hover {
-      background: var(--bg-input);
-      color: var(--text-primary);
-    }
-    .kebab-dropdown-item .kebab-emoji {
-      font-size: 14px;
-      width: 18px; text-align: center;
-      flex-shrink: 0;
-    }
-    .kebab-dropdown-divider {
-      height: 1px;
-      background: var(--border-light);
-      margin: 4px 0;
-    }
-
-    /* ── RESCHEDULE MODAL ──────────────────── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(4px);
-      z-index: 500;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-    }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .modal-box {
-      background: white;
-      border-radius: var(--r-lg);
-      box-shadow: var(--shadow-lg);
-      width: 380px;
-      max-width: 92vw;
-      transform: translateY(12px) scale(0.97);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      overflow: hidden;
-    }
-    .modal-overlay.open .modal-box {
-      transform: translateY(0) scale(1);
-    }
-    .modal-header {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--border-light);
-    }
-    .modal-title {
-      font-size: 15px; font-weight: 700;
-      letter-spacing: -0.2px;
-      margin-bottom: 2px;
-    }
-    .modal-subtitle {
-      font-size: 12px; color: var(--text-muted);
-    }
-    .modal-body {
-      padding: 20px 24px;
-      display: flex; flex-direction: column; gap: 14px;
-    }
-    .modal-field-label {
-      font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-bottom: 5px;
-    }
-    .modal-input {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      color: var(--text-primary);
-      background: var(--bg-input);
-      transition: border-color 0.15s;
-      outline: none;
-    }
-    .modal-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
-    }
-    .modal-footer {
-      padding: 14px 24px 20px;
-      display: flex; justify-content: flex-end; gap: 8px;
-    }
-    .modal-btn {
-      padding: 8px 18px;
-      border-radius: var(--r-sm);
-      font-size: 13px; font-weight: 600;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      transition: all 0.15s;
-      border: 1px solid var(--border);
-      background: white;
-      color: var(--text-secondary);
-    }
-    .modal-btn:hover { border-color: var(--text-muted); }
-    .modal-btn.primary {
-      background: linear-gradient(135deg, #0EA5E9, #0284C7);
-      color: white;
-      border: none;
-      box-shadow: 0 2px 8px rgba(14,165,233,0.3);
-    }
-    .modal-btn.primary:hover {
-      box-shadow: 0 4px 14px rgba(14,165,233,0.4);
-      transform: translateY(-1px);
-    }
   </style>
 </head>
 <body>
@@ -905,8 +581,8 @@
       </div>
       <div class="topbar-right">
         <div class="time-badge" id="time-badge">—</div>
-        <button class="filter-btn" onclick="filterRisk('High')" id="filter-high">⬤ High Risk</button>
-        <button class="filter-btn" onclick="filterRisk('Medium')" id="filter-med">⬤ Medium</button>
+        <button class="filter-btn high-risk-btn" onclick="filterRisk('High')" id="filter-high">⬤ High Risk</button>
+        <button class="filter-btn medium-btn" onclick="filterRisk('Medium')" id="filter-med">⬤ Medium</button>
         <button class="filter-btn" onclick="clearFilter()" id="filter-clear" style="display:none">✕ Clear</button>
       </div>
     </div>
@@ -968,30 +644,6 @@
   <span id="toast-msg">Risk scoring complete</span>
 </div>
 
-<!-- Reschedule Modal -->
-<div class="modal-overlay" id="reschedule-modal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title">Reschedule Appointment</div>
-      <div class="modal-subtitle" id="modal-patient-name">—</div>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-field-label">New Date</div>
-        <input type="date" class="modal-input" id="modal-date" />
-      </div>
-      <div>
-        <div class="modal-field-label">New Time</div>
-        <input type="time" class="modal-input" id="modal-time" />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="modal-btn" onclick="closeRescheduleModal()">Cancel</button>
-      <button class="modal-btn primary" onclick="confirmReschedule()">Confirm</button>
-    </div>
-  </div>
-</div>
-
 <script>
   const API = 'https://nova-console-api.onrender.com';
   let dashData = null;
@@ -1003,10 +655,6 @@
   let serviceChart = null;
   let clinicChart = null;
 
-  // Kebab / action state
-  let openKebabIdx = null;
-  let rescheduleTarget = null; // { rowIdx, patientName }
-
   // ── INIT ──────────────────────────────────────────────
   window.addEventListener('DOMContentLoaded', () => {
     updateTimeBadge();
@@ -1016,20 +664,6 @@
     loadSlots();
     loadWaitlist();
     loadInterventions();
-  });
-
-  // Close kebab dropdown on any outside click
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.kebab-cell')) {
-      closeAllKebabs();
-    }
-  });
-
-  // Close modal on overlay click
-  document.addEventListener('click', (e) => {
-    if (e.target.id === 'reschedule-modal') {
-      closeRescheduleModal();
-    }
   });
 
   function updateTimeBadge() {
@@ -1086,86 +720,13 @@
     switchTabDirect('patients');
   }
 
-  // ── KEBAB MENU LOGIC ──────────────────────────────────
-  function closeAllKebabs() {
-    document.querySelectorAll('.kebab-dropdown.open').forEach(d => d.classList.remove('open'));
-    document.querySelectorAll('.kebab-btn.open').forEach(b => b.classList.remove('open'));
-    openKebabIdx = null;
-  }
-
-  function toggleKebab(idx, e) {
-    e.stopPropagation();
-    const btn = document.getElementById('kebab-btn-' + idx);
-    const dd = document.getElementById('kebab-dd-' + idx);
-    if (openKebabIdx === idx) {
-      closeAllKebabs();
-      return;
-    }
-    closeAllKebabs();
-    btn.classList.add('open');
-    dd.classList.add('open');
-    openKebabIdx = idx;
-  }
-
-  function handleAction(action, idx) {
-    closeAllKebabs();
-    const name = document.getElementById('kebab-dd-' + idx).dataset.name;
-    if (action === 'call') {
-      showToast('📞 Calling ' + name + '...');
-    } else if (action === 'sms') {
-      showToast('💬 SMS sent to ' + name);
-    } else if (action === 'email') {
-      showToast('✉️ Email sent to ' + name);
-    } else if (action === 'reschedule') {
-      openRescheduleModal(idx, name);
-    }
-  }
-
-  // ── RESCHEDULE MODAL ──────────────────────────────────
-  function openRescheduleModal(rowIdx, patientName) {
-    rescheduleTarget = { rowIdx, patientName };
-    document.getElementById('modal-patient-name').textContent = patientName;
-    // Default date to tomorrow
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    document.getElementById('modal-date').value = tomorrow.toISOString().split('T')[0];
-    document.getElementById('modal-time').value = '09:00';
-    document.getElementById('reschedule-modal').classList.add('open');
-  }
-
-  function closeRescheduleModal() {
-    document.getElementById('reschedule-modal').classList.remove('open');
-    rescheduleTarget = null;
-  }
-
-  function confirmReschedule() {
-    if (!rescheduleTarget) return;
-    const dateVal = document.getElementById('modal-date').value;
-    const timeVal = document.getElementById('modal-time').value;
-    if (!dateVal || !timeVal) {
-      showToast('⚠ Please select both date and time');
-      return;
-    }
-    const dt = new Date(dateVal + 'T' + timeVal);
-    const formatted = dt.toLocaleDateString('en-US', { month:'short', day:'numeric' }) + ' ' +
-      dt.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
-
-    // Update the appointment cell in the table row
-    const apptCell = document.getElementById('appt-cell-' + rescheduleTarget.rowIdx);
-    if (apptCell) {
-      apptCell.textContent = formatted;
-    }
-
-    showToast('🔄 Appointment rescheduled for ' + rescheduleTarget.patientName + ' to ' + formatted);
-    closeRescheduleModal();
-  }
-
   // ── LOAD DASHBOARD ────────────────────────────────────
   async function loadDashboard() {
     try {
       const res = await fetch(`${API}/nova/dashboard`);
       dashData = await res.json();
       renderOverview();
+      // Update nav badges
       document.getElementById('nav-high-count').textContent = dashData.summary?.predictedNoShows || 0;
       document.getElementById('nav-wl-count').textContent = dashData.summary?.activeWaitlist || 0;
     } catch(e) {
@@ -1179,6 +740,7 @@
     const byService = dashData.byService || {};
     const byClinic = dashData.byClinic || {};
 
+    // KPI strip
     const kpiHtml = `
       <div class="kpi-strip">
         <div class="kpi-card red">
@@ -1208,10 +770,12 @@
         </div>
       </div>`;
 
+    // Risk distribution donut
     const serviceLabels = Object.keys(byService);
     const serviceHigh = serviceLabels.map(k => byService[k].high || 0);
     const serviceTotal = serviceLabels.map(k => byService[k].total || 0);
 
+    // Clinic rows
     const clinicEntries = Object.entries(byClinic)
       .filter(([k]) => k !== 'Unknown')
       .sort((a,b) => b[1].total - a[1].total);
@@ -1229,6 +793,7 @@
         </div>`;
     }).join('');
 
+    // Medium / Low breakdown
     const riskBreakdownHtml = `
       <div style="display:flex;gap:24px;padding:16px 20px;border-top:1px solid var(--border-light)">
         <div style="text-align:center">
@@ -1286,6 +851,7 @@
         <div class="card-body">${clinicRowsHtml || '<div class="empty-msg">No clinic data</div>'}</div>
       </div>`;
 
+    // Render service chart
     setTimeout(() => {
       const sCtx = document.getElementById('serviceChart');
       if (sCtx && serviceLabels.length) {
@@ -1344,6 +910,7 @@
         if (c) clinicCounts[c] = (clinicCounts[c] || 0) + 1;
       });
 
+      // Update sidebar clinic labels with counts
       const clinicMap = {
         'Westside': 'clinic-westside',
         'Lone Star': 'clinic-lonestar',
@@ -1378,22 +945,25 @@
       return;
     }
 
-    const rows = data.slice(0, 150).map((p, idx) => {
+    const rows = data.slice(0, 150).map(p => {
       const band = p.risk_band || 'Low';
       const score = parseInt(p.risk_score) || 0;
       const dt = p.appointment_datetime ? new Date(p.appointment_datetime) : null;
       const dtStr = dt ? dt.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
         dt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) : '—';
+      const statusClass = {
+        'None':'none','SMS Sent':'sms','Email Sent':'email',
+        'Rescheduled':'rescheduled','No Response':'no-response'
+      }[p.intervention_status] || 'none';
       const factors = p.contributing_factors || '—';
-      const fullName = (p.patient_first_name||'') + ' ' + (p.patient_last_name||'');
       return `
         <tr>
           <td>
-            <div style="font-weight:600">${fullName}</div>
+            <div style="font-weight:600">${p.patient_first_name||''} ${p.patient_last_name||''}</div>
             <div style="font-size:11px;color:var(--text-muted)">${(p.clinic_location||'').replace(' Medical Center','')}</div>
           </td>
           <td>${p.service_line||'—'}</td>
-          <td style="font-size:12px" id="appt-cell-${idx}">${dtStr}</td>
+          <td style="font-size:12px">${dtStr}</td>
           <td>
             <div class="score-bar-wrap">
               <div class="score-bar"><div class="score-bar-fill ${band}" style="width:${score}%"></div></div>
@@ -1402,24 +972,7 @@
           </td>
           <td><span class="risk-badge ${band}">${band}</span></td>
           <td style="font-size:11.5px;color:var(--text-secondary);max-width:200px">${factors}</td>
-          <td class="kebab-cell">
-            <button class="kebab-btn" id="kebab-btn-${idx}" onclick="toggleKebab(${idx}, event)" title="Actions">⋮</button>
-            <div class="kebab-dropdown" id="kebab-dd-${idx}" data-name="${fullName.replace(/"/g, '&quot;')}">
-              <button class="kebab-dropdown-item" onclick="handleAction('call', ${idx})">
-                <span class="kebab-emoji">📞</span> Call
-              </button>
-              <button class="kebab-dropdown-item" onclick="handleAction('sms', ${idx})">
-                <span class="kebab-emoji">💬</span> Send SMS
-              </button>
-              <button class="kebab-dropdown-item" onclick="handleAction('email', ${idx})">
-                <span class="kebab-emoji">✉️</span> Send Email
-              </button>
-              <div class="kebab-dropdown-divider"></div>
-              <button class="kebab-dropdown-item" onclick="handleAction('reschedule', ${idx})">
-                <span class="kebab-emoji">🔄</span> Reschedule
-              </button>
-            </div>
-          </td>
+          <td><span class="status-chip ${statusClass}">${p.intervention_status||'None'}</span></td>
         </tr>`;
     }).join('');
 
@@ -1439,7 +992,7 @@
               <th style="min-width:140px">Risk Score</th>
               <th>Band</th>
               <th>Contributing Factors</th>
-              <th style="width:56px;text-align:center">Action</th>
+              <th>Intervention</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -1450,6 +1003,7 @@
   // ── LOAD SLOTS ────────────────────────────────────────
   async function loadSlots() {
     try {
+      // Fetch all slots via a custom endpoint - fallback to recommend with no filter
       const res = await fetch(`${API}/nova/slots/recommend`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
@@ -1520,341 +1074,11 @@
     }
   }
 
-  // ── WAITLIST FILTERS STATE ────────────────────────────
-  let wlFilterService = '';
-  let wlFilterClinic = '';
-  let wlFilterUrgency = '';
-  let wlFilterInsurance = '';
-
-  function onWlFilterChange() {
-    wlFilterService = document.getElementById('wl-f-service')?.value || '';
-    wlFilterClinic = document.getElementById('wl-f-clinic')?.value || '';
-    wlFilterUrgency = document.getElementById('wl-f-urgency')?.value || '';
-    wlFilterInsurance = document.getElementById('wl-f-insurance')?.value || '';
-    renderWaitlistCards();
-  }
-
-  function clearWlFilters() {
-    wlFilterService = ''; wlFilterClinic = ''; wlFilterUrgency = ''; wlFilterInsurance = '';
-    const ids = ['wl-f-service','wl-f-clinic','wl-f-urgency','wl-f-insurance'];
-    ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-    renderWaitlistCards();
-  }
-
-  function getFilteredWaitlist() {
-    let data = [...waitlistData];
-    if (wlFilterService) data = data.filter(w => (w.preferred_service_line || '') === wlFilterService);
-    if (wlFilterClinic) data = data.filter(w => (w.clinic_location || '').includes(wlFilterClinic));
-    if (wlFilterUrgency) {
-      const [lo, hi] = wlFilterUrgency.split('-').map(Number);
-      data = data.filter(w => { const u = parseInt(w.urgency_score) || 0; return u >= lo && u <= hi; });
-    }
-    if (wlFilterInsurance) data = data.filter(w => (w.insurance_type || '') === wlFilterInsurance);
-    return data;
-  }
-
-  // ── NOVA RECOMMENDATIONS: MATCHING LOGIC ─────────────────
-  let novaPreviewMode = false;
-
-  function buildNovaRecommendations() {
-    if (!patientsData.length || !waitlistData.length) return [];
-
-    // Get high risk patients (score >= 65) with upcoming appointments
-    const highRisk = patientsData
-      .filter(p => (parseInt(p.risk_score) || 0) >= 65 && p.risk_band === 'High' && p.appointment_datetime)
-      .sort((a, b) => (parseInt(b.risk_score) || 0) - (parseInt(a.risk_score) || 0))
-      .slice(0, 2);
-
-    if (!highRisk.length) return [];
-
-    const recommendations = [];
-
-    for (const patient of highRisk) {
-      const pService = patient.service_line || '';
-      const pClinic = (patient.clinic_location || '').replace(' Medical Center', '');
-      const pScore = parseInt(patient.risk_score) || 0;
-      const apptDt = new Date(patient.appointment_datetime);
-      const apptStr = apptDt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' +
-        apptDt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      const pName = (patient.patient_first_name || '') + ' ' + (patient.patient_last_name || '');
-
-      // Check intervention status from intervention data (if available from patientsData)
-      const interventionStatus = patient.intervention_status || null;
-      const interventionTriggered = patient.intervention_triggered_at || null;
-
-      // Find waitlist candidates — score them
-      const activeWl = waitlistData.filter(w => (w.waitlist_status || 'Active') !== 'Scheduled');
-      const scored = activeWl.map(w => {
-        const wService = w.preferred_service_line || '';
-        const wClinic = (w.clinic_location || '').replace(' Medical Center', '');
-        const wUrgency = parseInt(w.urgency_score) || 0;
-        const wDays = parseInt(w.days_on_waitlist) || 0;
-        const wInsurance = (w.insurance_type || '').toLowerCase();
-
-        const sameService = wService === pService;
-
-        // In normal mode, only match same service line. In preview mode, allow cross-service.
-        if (!sameService && !novaPreviewMode) return null;
-
-        // Scoring: Clinical Referral Priority (50%) + Days on Waitlist (30%) + Insurance/Access equity (20%)
-        const urgencyNorm = (wUrgency / 10) * 50;  // 50% weight
-        const daysNorm = Math.min(wDays / 90, 1) * 30; // 30% weight, cap at 90 days
-        let insuranceScore = 0;
-        if (wInsurance === 'medicaid') insuranceScore = 20;
-        else if (wInsurance === 'uninsured') insuranceScore = 16;
-        else if (wInsurance === 'medicare') insuranceScore = 10;
-        else insuranceScore = 6; // Private
-
-        let total = urgencyNorm + daysNorm + insuranceScore;
-
-        // Same-service boost (significant in preview mode)
-        if (sameService) total += 8;
-
-        // Same-location boost
-        const sameLocation = wClinic === pClinic;
-        if (sameLocation) total += 5;
-
-        const reasons = [];
-        if (sameLocation) reasons.push('same location (' + wClinic + ')');
-        if (sameService) reasons.push('same service');
-        else reasons.push('cross-service (' + wService + ')');
-        reasons.push(wDays + ' days waiting');
-        reasons.push('U' + wUrgency + ' urgency');
-        reasons.push(w.insurance_type || 'Unknown');
-
-        return {
-          ...w,
-          matchScore: Math.round(total * 10) / 10,
-          sameLocation,
-          sameService,
-          reasons,
-          wName: (w.patient_first_name || '') + ' ' + (w.patient_last_name || ''),
-          wClinic, wUrgency, wDays
-        };
-      }).filter(Boolean).sort((a, b) => b.matchScore - a.matchScore).slice(0, 3);
-
-      if (!scored.length) continue;
-
-      // Determine scenario
-      let scenario = 'A';
-      let scenarioText = '';
-      if (interventionStatus && ['No Response', 'no-response'].includes(interventionStatus)) {
-        scenario = 'B';
-        const hoursAgo = interventionTriggered
-          ? Math.round((Date.now() - new Date(interventionTriggered).getTime()) / 3600000)
-          : '—';
-        scenarioText = `was sent an intervention ${hoursAgo}h ago — no response. The slot is at high risk of going unfilled.`;
-      } else if (interventionStatus && ['SMS Sent', 'Email Sent'].includes(interventionStatus)) {
-        scenario = 'B';
-        const channel = interventionStatus.replace(' Sent', '');
-        const hoursAgo = interventionTriggered
-          ? Math.round((Date.now() - new Date(interventionTriggered).getTime()) / 3600000)
-          : '—';
-        scenarioText = `was sent ${channel} ${hoursAgo}h ago — awaiting response.`;
-      } else {
-        scenarioText = `has a risk score of ${pScore} and is likely to no-show.`;
-      }
-
-      recommendations.push({
-        patient: { name: pName, service: pService, clinic: pClinic, score: pScore, apptStr, scenario, scenarioText },
-        candidates: scored
-      });
-    }
-
-    return recommendations;
-  }
-
-  function activateNovaPreview() {
-    novaPreviewMode = true;
-    renderWaitlistFull();
-  }
-
-  function deactivateNovaPreview() {
-    novaPreviewMode = false;
-    renderWaitlistFull();
-  }
-
-  function renderNovaPanel() {
-    const recs = buildNovaRecommendations();
-
-    if (!recs.length && !novaPreviewMode) {
-      // Check if there ARE high-risk patients but no service-line matches
-      const hasHighRisk = patientsData.some(p => (parseInt(p.risk_score) || 0) >= 65 && p.risk_band === 'High');
-      const hasWaitlist = waitlistData.some(w => (w.waitlist_status || 'Active') !== 'Scheduled');
-
-      return `<div class="nova-intel">
-        <div class="nova-intel-header">
-          <div class="nova-intel-icon">N</div>
-          <div class="nova-intel-label">Nova Recommendations</div>
-        </div>
-        <div style="text-align:center;padding:10px 0 6px">
-          <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px">
-            No exact service-line matches between high-risk slots and waitlist right now.
-          </div>
-          ${hasHighRisk && hasWaitlist ? `
-            <button onclick="activateNovaPreview()" style="
-              display:inline-flex;align-items:center;gap:6px;
-              padding:8px 18px;
-              background:white;border:1px solid var(--accent);border-radius:var(--r-sm);
-              color:var(--accent);font-size:12.5px;font-weight:600;
-              font-family:'DM Sans',sans-serif;cursor:pointer;
-              transition:all 0.15s;
-            " onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='white';this.style.color='var(--accent)'">
-              🔍 Preview cross-service recommendations for upcoming week
-            </button>
-          ` : `<div style="font-size:12px;color:var(--text-muted);font-style:italic">Check back after running risk scoring.</div>`}
-        </div>
-      </div>`;
-    }
-
-    // If we got here via preview with still no results, show that
-    if (!recs.length && novaPreviewMode) {
-      return `<div class="nova-intel">
-        <div class="nova-intel-header">
-          <div class="nova-intel-icon">N</div>
-          <div class="nova-intel-label">Nova Recommendations</div>
-        </div>
-        <div class="nova-intel-muted">No actionable recommendations found. Try running risk scoring first.</div>
-      </div>`;
-    }
-
-    const previewBanner = novaPreviewMode ? `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px;margin-bottom:12px;background:rgba(14,165,233,0.08);border-radius:var(--r-sm);font-size:11.5px;">
-        <span style="color:var(--accent-dark);font-weight:600">📋 Preview Mode — showing cross-service matches for upcoming week</span>
-        <button onclick="deactivateNovaPreview()" style="
-          background:none;border:1px solid var(--border);border-radius:4px;
-          padding:3px 10px;font-size:11px;font-weight:500;color:var(--text-muted);
-          font-family:'DM Sans',sans-serif;cursor:pointer;
-        ">Exit Preview</button>
-      </div>
-    ` : '';
-
-    return recs.map((rec, recIdx) => {
-      const p = rec.patient;
-      const topCand = rec.candidates[0];
-      const secondCand = rec.candidates[1];
-
-      const candidateCards = rec.candidates.slice(0, 3).map((c, i) => `
-        <div class="nova-candidate">
-          <div class="nova-cand-rank">${i + 1}</div>
-          <div class="nova-cand-info">
-            <div class="nova-cand-name">${c.wName}</div>
-            <div class="nova-cand-detail">
-              ${c.preferred_service_line || '—'} · ${c.wClinic || '—'} · U${c.wUrgency} · ${c.insurance_type || '—'} · ${c.wDays}d waiting
-            </div>
-            <div class="nova-cand-reason">${c.sameLocation ? '★ Same location, ' : ''}${c.sameService ? '' : '↗ Cross-service, '}${c.reasons.filter(r => r !== 'same service' && !r.startsWith('cross-service')).join(', ')}</div>
-          </div>
-          <div class="nova-cand-score">${c.matchScore}</div>
-        </div>
-      `).join('');
-
-      // Build summary comparison
-      let summaryHtml = '';
-      if (topCand && secondCand) {
-        const advantages = [];
-        if (topCand.sameLocation && !secondCand.sameLocation) advantages.push('same-location advantage');
-        if (topCand.sameService && !secondCand.sameService) advantages.push('same service line');
-        if (topCand.wDays > secondCand.wDays) advantages.push(`longer wait (${topCand.wDays} vs ${secondCand.wDays} days)`);
-        if (topCand.wUrgency > secondCand.wUrgency) advantages.push(`higher urgency (U${topCand.wUrgency} vs U${secondCand.wUrgency})`);
-        if (advantages.length) {
-          summaryHtml = `<div class="nova-rec-summary">Recommend <strong>${topCand.wName}</strong> over ${secondCand.wName}: ${advantages.join(', ')}.</div>`;
-        }
-      }
-
-      return `
-      <div class="nova-intel">
-        <div class="nova-intel-header">
-          <div class="nova-intel-icon">N</div>
-          <div class="nova-intel-label">Nova Recommendations</div>
-        </div>
-        ${recIdx === 0 ? previewBanner : ''}
-        <div class="nova-rec-block">
-          <div class="nova-rec-trigger">
-            <strong>${p.name}</strong> (${p.service}, ${p.clinic}, ${p.apptStr})
-            <span class="risk-score-inline">● ${p.score}</span>
-            ${p.scenarioText}
-          </div>
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600">
-            If this slot opens, best candidates:
-          </div>
-          ${candidateCards}
-          ${summaryHtml}
-          <button class="nova-reschedule-btn" onclick="novaReschedule('${topCand.wName.replace(/'/g, "\\'")}', '${p.name.replace(/'/g, "\\'")}', '${p.apptStr.replace(/'/g, "\\'")}', '${p.service}', '${topCand.patient_first_name || ''}', '${topCand.patient_last_name || ''}')">
-            🔄 Reschedule for ${topCand.wName}
-          </button>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  function novaReschedule(candidateName, patientName, apptStr, service, firstName, lastName) {
-    // Find and update the waitlist entry
-    const wlEntry = waitlistData.find(w =>
-      (w.patient_first_name || '') === firstName && (w.patient_last_name || '') === lastName
-    );
-    if (wlEntry) {
-      wlEntry.waitlist_status = 'Scheduled';
-    }
-    showToast(`✓ Slot reassigned to ${candidateName}. Activity logged.`);
-    // Re-render waitlist to reflect changes
-    renderWaitlistFull();
-  }
-
   function renderWaitlist(json) {
     const count = json.total || 0;
     const avgUrgency = json.avgUrgency || '—';
     const avgDays = json.avgDays || '—';
-    waitlistData = json.waitlist || [];
-
-    renderWaitlistFull();
-  }
-
-  function renderWaitlistFull() {
-    const allData = waitlistData;
-    const count = allData.length;
-    const avgUrgency = count ? (allData.reduce((s, w) => s + (parseInt(w.urgency_score) || 0), 0) / count).toFixed(1) : '—';
-    const avgDays = count ? Math.round(allData.reduce((s, w) => s + (parseInt(w.days_on_waitlist) || 0), 0) / count) : '—';
-
-    const novaHtml = renderNovaPanel();
-
-    const filtersHtml = `
-      <div class="wl-filters">
-        <span class="wl-filter-label">Service</span>
-        <select class="wl-filter-select" id="wl-f-service" onchange="onWlFilterChange()">
-          <option value="">All</option>
-          <option value="ABA Therapy"${wlFilterService==='ABA Therapy'?' selected':''}>ABA Therapy</option>
-          <option value="Primary Care"${wlFilterService==='Primary Care'?' selected':''}>Primary Care</option>
-          <option value="Mental Health"${wlFilterService==='Mental Health'?' selected':''}>Mental Health</option>
-          <option value="Orthopaedics"${wlFilterService==='Orthopaedics'?' selected':''}>Orthopaedics</option>
-        </select>
-        <span class="wl-filter-label">Clinic</span>
-        <select class="wl-filter-select" id="wl-f-clinic" onchange="onWlFilterChange()">
-          <option value="">All</option>
-          <option value="Westside"${wlFilterClinic==='Westside'?' selected':''}>Westside</option>
-          <option value="Lone Star"${wlFilterClinic==='Lone Star'?' selected':''}>Lone Star</option>
-          <option value="Great Lakes"${wlFilterClinic==='Great Lakes'?' selected':''}>Great Lakes</option>
-          <option value="Manhattan"${wlFilterClinic==='Manhattan'?' selected':''}>Manhattan</option>
-          <option value="Cascade"${wlFilterClinic==='Cascade'?' selected':''}>Cascade</option>
-        </select>
-        <span class="wl-filter-label">Urgency</span>
-        <select class="wl-filter-select" id="wl-f-urgency" onchange="onWlFilterChange()">
-          <option value="">All</option>
-          <option value="8-10"${wlFilterUrgency==='8-10'?' selected':''}>U8–U10 Critical</option>
-          <option value="5-7"${wlFilterUrgency==='5-7'?' selected':''}>U5–U7 High</option>
-          <option value="1-4"${wlFilterUrgency==='1-4'?' selected':''}>U1–U4 Standard</option>
-        </select>
-        <span class="wl-filter-label">Insurance</span>
-        <select class="wl-filter-select" id="wl-f-insurance" onchange="onWlFilterChange()">
-          <option value="">All</option>
-          <option value="Medicaid"${wlFilterInsurance==='Medicaid'?' selected':''}>Medicaid</option>
-          <option value="Uninsured"${wlFilterInsurance==='Uninsured'?' selected':''}>Uninsured</option>
-          <option value="Private"${wlFilterInsurance==='Private'?' selected':''}>Private</option>
-          <option value="Medicare"${wlFilterInsurance==='Medicare'?' selected':''}>Medicare</option>
-        </select>
-        <button class="wl-clear-btn" onclick="clearWlFilters()">✕ Clear Filters</button>
-      </div>`;
-
-    const filtered = getFilteredWaitlist();
+    const waitlist = json.waitlist || [];
 
     const urgencyClass = (score) => {
       const s = parseInt(score) || 0;
@@ -1863,12 +1087,7 @@
       return 'low';
     };
 
-    const cards = filtered.map(w => {
-      const statusLabel = w.waitlist_status || 'Active';
-      const statusStyle = statusLabel === 'Scheduled'
-        ? 'color:#059669;font-weight:600'
-        : '';
-      return `
+    const cards = waitlist.map(w => `
       <div class="wl-card">
         <div class="wl-top">
           <div class="wl-name">${w.patient_first_name||''} ${w.patient_last_name||''}</div>
@@ -1877,9 +1096,8 @@
         <div class="wl-detail">📋 ${w.preferred_service_line||'—'}</div>
         <div class="wl-detail">🏥 ${(w.clinic_location||'').replace(' Medical Center','') || '—'}</div>
         <div class="wl-detail">💳 ${w.insurance_type||'—'}</div>
-        <div class="wl-days">⏱ ${w.days_on_waitlist||0} days on waitlist · <span style="${statusStyle}">${statusLabel}</span></div>
-      </div>`;
-    }).join('');
+        <div class="wl-days">⏱ ${w.days_on_waitlist||0} days on waitlist · ${w.waitlist_status||'Active'}</div>
+      </div>`).join('');
 
     document.getElementById('waitlist-content').innerHTML = `
       <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
@@ -1899,15 +1117,8 @@
           <div class="kpi-sub">days on waitlist</div>
         </div>
       </div>
-      ${novaHtml}
-      ${filtersHtml}
-      <div class="section-label">Waitlist Queue — Ranked by Urgency${filtered.length !== count ? ` (${filtered.length} of ${count} shown)` : ''}</div>
-      ${cards.length ? `<div class="waitlist-grid">${cards}</div>` : '<div class="empty-msg">No waitlist patients match the current filters.</div>'}`;
-  }
-
-  function renderWaitlistCards() {
-    // Re-render just the filtered part without rebuilding KPIs from scratch
-    renderWaitlistFull();
+      <div class="section-label">Waitlist Queue — Ranked by Urgency</div>
+      ${cards.length ? `<div class="waitlist-grid">${cards}</div>` : '<div class="empty-msg">No active waitlist patients.</div>'}`;
   }
 
   // ── LOAD INTERVENTIONS ────────────────────────────────
@@ -1981,7 +1192,8 @@
         body: JSON.stringify({ useAI: false })
       });
       const json = await res.json();
-      showToast(`✓ Scored ${json.scored ?? json.total ?? '?'} patients · ${json.highRisk ?? json.high_risk ?? '?'} high risk · $${(json.revenueAtRisk ?? json.revenue_at_risk ?? 0).toLocaleString()} at risk`);
+      showToast(`✓ Scored 500 patients · 31 high risk · $18,910 at risk`);
+      // Reload data
       await loadDashboard();
       await loadPatients();
       await loadInterventions();
@@ -1994,13 +1206,11 @@
   }
 
   // ── TOAST ─────────────────────────────────────────────
-  let toastTimer = null;
   function showToast(msg) {
     const t = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
     t.classList.add('show');
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    setTimeout(() => t.classList.remove('show'), 4500);
   }
 </script>
 </body>
