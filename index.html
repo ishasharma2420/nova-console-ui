@@ -495,6 +495,85 @@
     /* scrollbar for content */
     .content::-webkit-scrollbar { width:5px; }
     .content::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+    /* ── NOVA RECOMMENDATIONS PANEL ──────────── */
+    .nova-intel {
+      background: linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%);
+      border: 1px solid #BAE6FD;
+      border-left: 4px solid var(--accent);
+      border-radius: var(--r-md);
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .nova-intel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .nova-intel-icon {
+      width: 24px; height: 24px;
+      background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: white;
+      box-shadow: 0 0 10px rgba(14,165,233,0.3); flex-shrink: 0;
+    }
+    .nova-intel-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-dark); }
+    .nova-intel-muted { text-align: center; padding: 12px 0; font-size: 12.5px; color: var(--text-muted); font-style: italic; }
+    .nova-rec-block { background: white; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 14px 16px; margin-bottom: 10px; }
+    .nova-rec-block:last-child { margin-bottom: 0; }
+    .nova-rec-trigger { font-size: 13px; color: var(--text-primary); line-height: 1.55; margin-bottom: 10px; }
+    .nova-rec-trigger strong { font-weight: 700; }
+    .nova-rec-trigger .risk-score-inline {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: var(--red-bg); color: var(--red-dark);
+      font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 3px; vertical-align: middle;
+    }
+    .nova-candidate { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--border-light); }
+    .nova-candidate:first-of-type { border-top: none; }
+    .nova-cand-rank {
+      width: 22px; height: 22px; background: var(--accent); color: white;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+    }
+    .nova-cand-info { flex: 1; }
+    .nova-cand-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .nova-cand-detail { font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; }
+    .nova-cand-reason { font-size: 11px; color: var(--accent-dark); font-weight: 500; margin-top: 3px; font-style: italic; }
+    .nova-cand-score {
+      font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600;
+      color: var(--accent-dark); background: var(--accent-glow); padding: 2px 8px; border-radius: 4px;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .nova-rec-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-light); }
+    .nova-rec-summary strong { color: var(--text-primary); }
+    .nova-reschedule-btn {
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+      padding: 7px 16px; background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      border: none; border-radius: var(--r-sm); color: white; font-size: 12px; font-weight: 600;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; box-shadow: 0 2px 8px rgba(14,165,233,0.3); transition: all 0.15s;
+    }
+    .nova-reschedule-btn:hover { box-shadow: 0 4px 14px rgba(14,165,233,0.4); transform: translateY(-1px); }
+
+    /* ── WAITLIST FILTERS BAR ────────────────── */
+    .wl-filters {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+      margin-bottom: 16px; padding: 12px 16px;
+      background: white; border: 1px solid var(--border); border-radius: var(--r-md);
+    }
+    .wl-filter-select {
+      padding: 6px 28px 6px 10px; border: 1px solid var(--border); border-radius: var(--r-sm);
+      background: var(--bg-input); font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px; font-weight: 500; color: var(--text-primary);
+      cursor: pointer; transition: border-color 0.15s; outline: none;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394A3B8'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+    }
+    .wl-filter-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .wl-filter-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-right: -4px; }
+    .wl-clear-btn {
+      padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--r-sm);
+      background: white; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer; transition: all 0.15s; margin-left: auto;
+    }
+    .wl-clear-btn:hover { border-color: var(--red); color: var(--red); }
   </style>
 </head>
 <body>
@@ -1203,6 +1282,191 @@
       btn.disabled = false;
       btnText.textContent = '⚡ Run Risk Scoring';
     }
+  }
+
+
+  // ── WAITLIST FILTERS STATE ────────────────────────────
+  let wlFilterService = '';
+  let wlFilterClinic = '';
+  let wlFilterUrgency = '';
+  let wlFilterInsurance = '';
+
+  function onWlFilterChange() {
+    wlFilterService = document.getElementById('wl-f-service')?.value || '';
+    wlFilterClinic = document.getElementById('wl-f-clinic')?.value || '';
+    wlFilterUrgency = document.getElementById('wl-f-urgency')?.value || '';
+    wlFilterInsurance = document.getElementById('wl-f-insurance')?.value || '';
+    renderWaitlistCards();
+  }
+
+  function clearWlFilters() {
+    wlFilterService = ''; wlFilterClinic = ''; wlFilterUrgency = ''; wlFilterInsurance = '';
+    const ids = ['wl-f-service','wl-f-clinic','wl-f-urgency','wl-f-insurance'];
+    ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    renderWaitlistCards();
+  }
+
+  function getFilteredWaitlist() {
+    let data = [...waitlistData];
+    if (wlFilterService) data = data.filter(w => (w.preferred_service_line || '') === wlFilterService);
+    if (wlFilterClinic) data = data.filter(w => (w.clinic_location || '').includes(wlFilterClinic));
+    if (wlFilterUrgency) {
+      const [lo, hi] = wlFilterUrgency.split('-').map(Number);
+      data = data.filter(w => { const u = parseInt(w.urgency_score) || 0; return u >= lo && u <= hi; });
+    }
+    if (wlFilterInsurance) data = data.filter(w => (w.insurance_type || '') === wlFilterInsurance);
+    return data;
+  }
+
+  // ── NOVA RECOMMENDATIONS: MATCHING LOGIC ─────────────────
+  let novaPreviewMode = false;
+
+  function buildNovaRecommendations() {
+    if (!patientsData.length || !waitlistData.length) return [];
+    const highRisk = patientsData
+      .filter(p => (parseInt(p.risk_score) || 0) >= 65 && p.risk_band === 'High' && p.appointment_datetime)
+      .sort((a, b) => (parseInt(b.risk_score) || 0) - (parseInt(a.risk_score) || 0))
+      .slice(0, 2);
+    if (!highRisk.length) return [];
+    const recommendations = [];
+    for (const patient of highRisk) {
+      const pService = patient.service_line || '';
+      const pClinic = (patient.clinic_location || '').replace(' Medical Center', '');
+      const pScore = parseInt(patient.risk_score) || 0;
+      const apptDt = new Date(patient.appointment_datetime);
+      const apptStr = apptDt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' +
+        apptDt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      const pName = (patient.patient_first_name || '') + ' ' + (patient.patient_last_name || '');
+      const interventionStatus = patient.intervention_status || null;
+      const interventionTriggered = patient.intervention_triggered_at || null;
+      const activeWl = waitlistData.filter(w => (w.waitlist_status || 'Active') !== 'Scheduled');
+      const scored = activeWl.map(w => {
+        const wService = w.preferred_service_line || '';
+        const wClinic = (w.clinic_location || '').replace(' Medical Center', '');
+        const wUrgency = parseInt(w.urgency_score) || 0;
+        const wDays = parseInt(w.days_on_waitlist) || 0;
+        const wInsurance = (w.insurance_type || '').toLowerCase();
+        const sameService = wService === pService;
+        if (!sameService && !novaPreviewMode) return null;
+        const urgencyNorm = (wUrgency / 10) * 50;
+        const daysNorm = Math.min(wDays / 90, 1) * 30;
+        let insuranceScore = 0;
+        if (wInsurance === 'medicaid') insuranceScore = 20;
+        else if (wInsurance === 'uninsured') insuranceScore = 16;
+        else if (wInsurance === 'medicare') insuranceScore = 10;
+        else insuranceScore = 6;
+        let total = urgencyNorm + daysNorm + insuranceScore;
+        if (sameService) total += 8;
+        const sameLocation = wClinic === pClinic;
+        if (sameLocation) total += 5;
+        const reasons = [];
+        if (sameLocation) reasons.push('same location (' + wClinic + ')');
+        if (sameService) reasons.push('same service');
+        else reasons.push('cross-service (' + wService + ')');
+        reasons.push(wDays + ' days waiting');
+        reasons.push('U' + wUrgency + ' urgency');
+        reasons.push(w.insurance_type || 'Unknown');
+        return { ...w, matchScore: Math.round(total * 10) / 10, sameLocation, sameService, reasons,
+          wName: (w.patient_first_name || '') + ' ' + (w.patient_last_name || ''), wClinic, wUrgency, wDays };
+      }).filter(Boolean).sort((a, b) => b.matchScore - a.matchScore).slice(0, 3);
+      if (!scored.length) continue;
+      let scenarioText = '';
+      if (interventionStatus && ['No Response', 'no-response'].includes(interventionStatus)) {
+        const hoursAgo = interventionTriggered ? Math.round((Date.now() - new Date(interventionTriggered).getTime()) / 3600000) : '—';
+        scenarioText = `was sent an intervention ${hoursAgo}h ago — no response. The slot is at high risk of going unfilled.`;
+      } else if (interventionStatus && ['SMS Sent', 'Email Sent'].includes(interventionStatus)) {
+        const channel = interventionStatus.replace(' Sent', '');
+        const hoursAgo = interventionTriggered ? Math.round((Date.now() - new Date(interventionTriggered).getTime()) / 3600000) : '—';
+        scenarioText = `was sent ${channel} ${hoursAgo}h ago — awaiting response.`;
+      } else {
+        scenarioText = `has a risk score of ${pScore} and is likely to no-show.`;
+      }
+      recommendations.push({ patient: { name: pName, service: pService, clinic: pClinic, score: pScore, apptStr, scenarioText }, candidates: scored });
+    }
+    return recommendations;
+  }
+
+  function activateNovaPreview() { novaPreviewMode = true; renderWaitlistFull(); }
+  function deactivateNovaPreview() { novaPreviewMode = false; renderWaitlistFull(); }
+
+  function renderNovaPanel() {
+    const recs = buildNovaRecommendations();
+    if (!recs.length && !novaPreviewMode) {
+      const hasHighRisk = patientsData.some(p => (parseInt(p.risk_score) || 0) >= 65 && p.risk_band === 'High');
+      const hasWaitlist = waitlistData.some(w => (w.waitlist_status || 'Active') !== 'Scheduled');
+      return `<div class="nova-intel">
+        <div class="nova-intel-header">
+          <div class="nova-intel-icon">N</div>
+          <div class="nova-intel-label">Nova Recommendations</div>
+        </div>
+        <div style="text-align:center;padding:10px 0 6px">
+          <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px">No exact service-line matches between high-risk slots and waitlist right now.</div>
+          ${hasHighRisk && hasWaitlist ? `
+            <button onclick="activateNovaPreview()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:white;border:1px solid var(--accent);border-radius:var(--r-sm);color:var(--accent);font-size:12.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s;"
+              onmouseover="this.style.background='var(--accent)';this.style.color='white'"
+              onmouseout="this.style.background='white';this.style.color='var(--accent)'">
+              🔍 Preview cross-service recommendations for upcoming week
+            </button>
+          ` : `<div style="font-size:12px;color:var(--text-muted);font-style:italic">Check back after running risk scoring.</div>`}
+        </div>
+      </div>`;
+    }
+    if (!recs.length && novaPreviewMode) {
+      return `<div class="nova-intel"><div class="nova-intel-header"><div class="nova-intel-icon">N</div><div class="nova-intel-label">Nova Recommendations</div></div><div class="nova-intel-muted">No actionable recommendations found. Try running risk scoring first.</div></div>`;
+    }
+    const previewBanner = novaPreviewMode ? `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px;margin-bottom:12px;background:rgba(14,165,233,0.08);border-radius:var(--r-sm);font-size:11.5px;">
+        <span style="color:var(--accent-dark);font-weight:600">📋 Preview Mode — showing cross-service matches for upcoming week</span>
+        <button onclick="deactivateNovaPreview()" style="background:none;border:1px solid var(--border);border-radius:4px;padding:3px 10px;font-size:11px;font-weight:500;color:var(--text-muted);font-family:'DM Sans',sans-serif;cursor:pointer;">Exit Preview</button>
+      </div>` : '';
+    return recs.map((rec, recIdx) => {
+      const p = rec.patient;
+      const topCand = rec.candidates[0];
+      const secondCand = rec.candidates[1];
+      const candidateCards = rec.candidates.slice(0, 3).map((c, i) => `
+        <div class="nova-candidate">
+          <div class="nova-cand-rank">${i + 1}</div>
+          <div class="nova-cand-info">
+            <div class="nova-cand-name">${c.wName}</div>
+            <div class="nova-cand-detail">${c.preferred_service_line || '—'} · ${c.wClinic || '—'} · U${c.wUrgency} · ${c.insurance_type || '—'} · ${c.wDays}d waiting</div>
+            <div class="nova-cand-reason">${c.sameLocation ? '★ Same location, ' : ''}${c.sameService ? '' : '↗ Cross-service, '}${c.reasons.filter(r => r !== 'same service' && !r.startsWith('cross-service')).join(', ')}</div>
+          </div>
+          <div class="nova-cand-score">${c.matchScore}</div>
+        </div>`).join('');
+      let summaryHtml = '';
+      if (topCand && secondCand) {
+        const advantages = [];
+        if (topCand.sameLocation && !secondCand.sameLocation) advantages.push('same-location advantage');
+        if (topCand.sameService && !secondCand.sameService) advantages.push('same service line');
+        if (topCand.wDays > secondCand.wDays) advantages.push(`longer wait (${topCand.wDays} vs ${secondCand.wDays} days)`);
+        if (topCand.wUrgency > secondCand.wUrgency) advantages.push(`higher urgency (U${topCand.wUrgency} vs U${secondCand.wUrgency})`);
+        if (advantages.length) summaryHtml = `<div class="nova-rec-summary">Recommend <strong>${topCand.wName}</strong> over ${secondCand.wName}: ${advantages.join(', ')}.</div>`;
+      }
+      return `<div class="nova-intel">
+        <div class="nova-intel-header"><div class="nova-intel-icon">N</div><div class="nova-intel-label">Nova Recommendations</div></div>
+        ${recIdx === 0 ? previewBanner : ''}
+        <div class="nova-rec-block">
+          <div class="nova-rec-trigger">
+            <strong>${p.name}</strong> (${p.service}, ${p.clinic}, ${p.apptStr})
+            <span class="risk-score-inline">● ${p.score}</span>
+            ${p.scenarioText}
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600">If this slot opens, best candidates:</div>
+          ${candidateCards}
+          ${summaryHtml}
+          <button class="nova-reschedule-btn" onclick="novaReschedule('${topCand.wName.replace(/'/g, "\'")}', '${p.name.replace(/'/g, "\'")}', '${p.apptStr.replace(/'/g, "\'")}', '${p.service}', '${topCand.patient_first_name || ''}', '${topCand.patient_last_name || ''}')">
+            🔄 Reschedule for ${topCand.wName}
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function novaReschedule(candidateName, patientName, apptStr, service, firstName, lastName) {
+    const wlEntry = waitlistData.find(w => (w.patient_first_name || '') === firstName && (w.patient_last_name || '') === lastName);
+    if (wlEntry) wlEntry.waitlist_status = 'Scheduled';
+    showToast(`✓ Slot reassigned to ${candidateName}. Activity logged.`);
+    renderWaitlistFull();
   }
 
   // ── TOAST ─────────────────────────────────────────────
