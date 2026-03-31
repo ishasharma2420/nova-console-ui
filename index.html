@@ -1154,50 +1154,8 @@
   }
 
   function renderWaitlist(json) {
-    const count = json.total || 0;
-    const avgUrgency = json.avgUrgency || '—';
-    const avgDays = json.avgDays || '—';
-    const waitlist = json.waitlist || [];
-
-    const urgencyClass = (score) => {
-      const s = parseInt(score) || 0;
-      if (s >= 8) return 'high';
-      if (s >= 5) return 'medium';
-      return 'low';
-    };
-
-    const cards = waitlist.map(w => `
-      <div class="wl-card">
-        <div class="wl-top">
-          <div class="wl-name">${w.patient_first_name||''} ${w.patient_last_name||''}</div>
-          <div class="wl-urgency ${urgencyClass(w.urgency_score)}">U${w.urgency_score}</div>
-        </div>
-        <div class="wl-detail">📋 ${w.preferred_service_line||'—'}</div>
-        <div class="wl-detail">🏥 ${(w.clinic_location||'').replace(' Medical Center','') || '—'}</div>
-        <div class="wl-detail">💳 ${w.insurance_type||'—'}</div>
-        <div class="wl-days">⏱ ${w.days_on_waitlist||0} days on waitlist · ${w.waitlist_status||'Active'}</div>
-      </div>`).join('');
-
-    document.getElementById('waitlist-content').innerHTML = `
-      <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
-        <div class="kpi-card blue">
-          <div class="kpi-label">Active Waitlist</div>
-          <div class="kpi-value blue">${count}</div>
-          <div class="kpi-sub">patients waiting</div>
-        </div>
-        <div class="kpi-card green">
-          <div class="kpi-label">Avg Urgency</div>
-          <div class="kpi-value green">${avgUrgency}</div>
-          <div class="kpi-sub">out of 10</div>
-        </div>
-        <div class="kpi-card amber">
-          <div class="kpi-label">Avg Wait</div>
-          <div class="kpi-value amber">${avgDays}d</div>
-          <div class="kpi-sub">days on waitlist</div>
-        </div>
-      </div>
-      <div class="section-label">Waitlist Queue — Ranked by Urgency</div>
-      ${cards.length ? `<div class="waitlist-grid">${cards}</div>` : '<div class="empty-msg">No active waitlist patients.</div>'}`;
+    waitlistData = json.waitlist || [];
+    renderWaitlistFull();
   }
 
   // ── LOAD INTERVENTIONS ────────────────────────────────
@@ -1460,6 +1418,104 @@
         </div>
       </div>`;
     }).join('');
+  }
+
+  function renderWaitlistFull() {
+    const allData = waitlistData;
+    const count = allData.length;
+    const avgUrgency = count ? (allData.reduce((s, w) => s + (parseInt(w.urgency_score) || 0), 0) / count).toFixed(1) : '—';
+    const avgDays = count ? Math.round(allData.reduce((s, w) => s + (parseInt(w.days_on_waitlist) || 0), 0) / count) : '—';
+
+    const novaHtml = renderNovaPanel();
+
+    const filtersHtml = `
+      <div class="wl-filters">
+        <span class="wl-filter-label">Service</span>
+        <select class="wl-filter-select" id="wl-f-service" onchange="onWlFilterChange()">
+          <option value="">All</option>
+          <option value="ABA Therapy"\${wlFilterService==='ABA Therapy'?' selected':''}>ABA Therapy</option>
+          <option value="Primary Care"\${wlFilterService==='Primary Care'?' selected':''}>Primary Care</option>
+          <option value="Mental Health"\${wlFilterService==='Mental Health'?' selected':''}>Mental Health</option>
+          <option value="Orthopaedics"\${wlFilterService==='Orthopaedics'?' selected':''}>Orthopaedics</option>
+        </select>
+        <span class="wl-filter-label">Clinic</span>
+        <select class="wl-filter-select" id="wl-f-clinic" onchange="onWlFilterChange()">
+          <option value="">All</option>
+          <option value="Westside"\${wlFilterClinic==='Westside'?' selected':''}>Westside</option>
+          <option value="Lone Star"\${wlFilterClinic==='Lone Star'?' selected':''}>Lone Star</option>
+          <option value="Great Lakes"\${wlFilterClinic==='Great Lakes'?' selected':''}>Great Lakes</option>
+          <option value="Manhattan"\${wlFilterClinic==='Manhattan'?' selected':''}>Manhattan</option>
+          <option value="Cascade"\${wlFilterClinic==='Cascade'?' selected':''}>Cascade</option>
+        </select>
+        <span class="wl-filter-label">Urgency</span>
+        <select class="wl-filter-select" id="wl-f-urgency" onchange="onWlFilterChange()">
+          <option value="">All</option>
+          <option value="8-10"\${wlFilterUrgency==='8-10'?' selected':''}>U8–U10 Critical</option>
+          <option value="5-7"\${wlFilterUrgency==='5-7'?' selected':''}>U5–U7 High</option>
+          <option value="1-4"\${wlFilterUrgency==='1-4'?' selected':''}>U1–U4 Standard</option>
+        </select>
+        <span class="wl-filter-label">Insurance</span>
+        <select class="wl-filter-select" id="wl-f-insurance" onchange="onWlFilterChange()">
+          <option value="">All</option>
+          <option value="Medicaid"\${wlFilterInsurance==='Medicaid'?' selected':''}>Medicaid</option>
+          <option value="Uninsured"\${wlFilterInsurance==='Uninsured'?' selected':''}>Uninsured</option>
+          <option value="Private"\${wlFilterInsurance==='Private'?' selected':''}>Private</option>
+          <option value="Medicare"\${wlFilterInsurance==='Medicare'?' selected':''}>Medicare</option>
+        </select>
+        <button class="wl-clear-btn" onclick="clearWlFilters()">✕ Clear Filters</button>
+      </div>`;
+
+    const filtered = getFilteredWaitlist();
+
+    const urgencyClass = (score) => {
+      const s = parseInt(score) || 0;
+      if (s >= 8) return 'high';
+      if (s >= 5) return 'medium';
+      return 'low';
+    };
+
+    const cards = filtered.map(w => {
+      const statusLabel = w.waitlist_status || 'Active';
+      const statusStyle = statusLabel === 'Scheduled' ? 'color:#059669;font-weight:600' : '';
+      return `
+      <div class="wl-card">
+        <div class="wl-top">
+          <div class="wl-name">\${w.patient_first_name||''} \${w.patient_last_name||''}</div>
+          <div class="wl-urgency \${urgencyClass(w.urgency_score)}">U\${w.urgency_score}</div>
+        </div>
+        <div class="wl-detail">📋 \${w.preferred_service_line||'—'}</div>
+        <div class="wl-detail">🏥 \${(w.clinic_location||'').replace(' Medical Center','') || '—'}</div>
+        <div class="wl-detail">💳 \${w.insurance_type||'—'}</div>
+        <div class="wl-days">⏱ \${w.days_on_waitlist||0} days on waitlist · <span style="\${statusStyle}">\${statusLabel}</span></div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('waitlist-content').innerHTML = `
+      <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+        <div class="kpi-card blue">
+          <div class="kpi-label">Active Waitlist</div>
+          <div class="kpi-value blue">\${count}</div>
+          <div class="kpi-sub">patients waiting</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Avg Urgency</div>
+          <div class="kpi-value green">\${avgUrgency}</div>
+          <div class="kpi-sub">out of 10</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Avg Wait</div>
+          <div class="kpi-value amber">\${avgDays}d</div>
+          <div class="kpi-sub">days on waitlist</div>
+        </div>
+      </div>
+      \${novaHtml}
+      \${filtersHtml}
+      <div class="section-label">Waitlist Queue — Ranked by Urgency\${filtered.length !== count ? \` (\${filtered.length} of \${count} shown)\` : ''}</div>
+      \${cards.length ? \`<div class="waitlist-grid">\${cards}</div>\` : '<div class="empty-msg">No waitlist patients match the current filters.</div>'}`;
+  }
+
+  function renderWaitlistCards() {
+    renderWaitlistFull();
   }
 
   function novaReschedule(candidateName, patientName, apptStr, service, firstName, lastName) {
