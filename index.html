@@ -412,7 +412,10 @@ function renderOverview(){
   const byService=dashData.byService||{};
   const byClinic=dashData.byClinic||{};
 
-  const slotsFillable = slotsData.length || '—';
+  // Open slots KPI: sum generated availability across all service lines (demo data, not timing-dependent)
+  const slLines=(typeof slotServiceOptions!=='undefined'&&slotServiceOptions.length)?slotServiceOptions:Object.keys(dashData?.byService||{}).filter(k=>k&&k!=='Unknown');
+  let slotsFillable=0; try{ (slLines.length?slLines:['Primary Care']).forEach(l=>{slotsFillable+=genSlots(l).length;}); }catch(e){ slotsFillable=slotsData.length; }
+  if(!slotsFillable)slotsFillable='—';
   const scored=(s.predictedNoShows||0)+(s.mediumRisk||0)+(s.lowRisk||0);
   const pct=n=>scored?Math.round(n/scored*100):0;
   const kpis=`
@@ -669,23 +672,53 @@ function topServiceLine(){
   return bs[0]||'Primary Care';
 }
 
+// Mocked near-future open slots — Mavis slot data is past-dated and read-only,
+// so we generate realistic availability client-side for the demo. No backend call.
+const PROVIDERS={
+  'Primary Care':['Alvarez','Chen','Okafor'],'ABA Therapy':['Reddy','Morozov','Bianchi'],
+  'Mental Health':['Nguyen','Patel','Brooks'],'Orthopaedics':['Walsh','Kim'],
+  'Dermatology':['Rossi','Haddad'],'Pain Management':['Silva','Turner'],
+  'IVF & Fertility':['Kapoor','Lindqvist'],'Pediatrics':['Munoz','Osei'],'Cardiology':['Vance','Ito']
+};
+const TIMES={Morning:['08:30','09:15','10:00','11:00'],Afternoon:['13:00','14:15','15:30'],Evening:['17:00','18:00','18:45']};
+function genSlots(line){
+  const provs=PROVIDERS[line]||['Smith','Jones'];
+  const out=[]; const today=new Date(); let added=0;
+  // next ~12 days, skip weekends, a few slots per day
+  for(let d=1; d<=16 && added<10; d++){
+    const day=new Date(today); day.setDate(today.getDate()+d);
+    const dow=day.getDay(); if(dow===0||dow===6)continue;
+    const types=Object.keys(TIMES);
+    // deterministic-ish spread: 1-2 slots per day
+    const nSlots=(d%3===0)?2:1;
+    for(let k=0;k<nSlots && added<10;k++){
+      const type=types[(d+k)%types.length];
+      const t=TIMES[type][(d+k)%TIMES[type].length];
+      const [hh,mm]=t.split(':');
+      const dt=new Date(day); dt.setHours(+hh,+mm,0,0);
+      const fill= type==='Morning'?0.72+((d%3)*0.06) : type==='Afternoon'?0.55+((d%3)*0.05) : 0.4+((d%3)*0.05);
+      out.push({
+        slot_id:'SLT-'+line.slice(0,3).toUpperCase()+d+k,
+        slot_datetime:dt.toISOString(),
+        service_line:line,
+        slot_type:type,
+        provider_name:provs[(d+k)%provs.length],
+        predicted_fill_probability:Math.min(0.9,+fill.toFixed(2))
+      });
+      added++;
+    }
+  }
+  return out;
+}
+
 async function loadSlots(){
-  // first load defers to busiest line once patients are in; kick a default now
   slotService = slotService || 'Primary Care';
-  await fetchSlots(slotService);
+  fetchSlots(slotService);
 }
-async function fetchSlots(line){
+function fetchSlots(line){
   slotService=line;
-  document.getElementById('panel-slots')&&renderSlotsLoading();
-  try{
-    const r=await fetch(`${API}/nova/slots/recommend`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_line:line})});
-    const j=await r.json(); slotsData=j.recommended_slots||[];
-  }catch(e){slotsData=[];}
+  slotsData=genSlots(line);
   renderSlots();
-}
-function renderSlotsLoading(){
-  const opts=slotServiceOptionsHtml();
-  document.getElementById('panel-slots').innerHTML=slotControls(opts)+`<div class="empty">Loading ${slotService} slots…</div>`;
 }
 function slotServiceOptionsHtml(){
   // build from dashboard byService keys (what the backend actually has)
