@@ -72,6 +72,13 @@
   .kpi.red .v{color:var(--red)} .kpi.amber .v{color:var(--amber)} .kpi.blue .v{color:var(--blue)} .kpi.green .v{color:var(--green)}
   .kpi .s{font-size:12.5px;color:var(--faint)}
   .kpi .spark{height:26px;margin-top:4px}
+  .kpi.has-pop{cursor:default}
+  .kpi-pop{position:absolute;top:calc(100% + 8px);left:0;z-index:50;background:var(--ink);border-radius:10px;padding:13px 15px;min-width:210px;box-shadow:0 12px 34px rgba(15,30,46,.28);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .16s,transform .16s}
+  .kpi.has-pop:hover .kpi-pop{opacity:1;transform:translateY(0)}
+  .kpi-pop .pk{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#6E819C;font-weight:600;margin-bottom:9px}
+  .kpi-pop .pr{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px 0;font-size:12.5px;color:#C4D0E0}
+  .kpi-pop .pr b{color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+  .kpi-pop .pr .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:7px}
 
   /* ── CARD ── */
   .card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
@@ -345,7 +352,8 @@ function hideScan(){document.getElementById('scan').classList.add('hide');}
 window.addEventListener('DOMContentLoaded',()=>{
   runScan();
   stamp();
-  Promise.all([loadDashboard(),loadPatients(),loadSlots(),loadWaitlist(),loadInterventions()])
+  Promise.all([loadDashboard(),loadPatients(),loadWaitlist(),loadInterventions()])
+    .then(()=>{ slotService=topServiceLine(); return fetchSlots(slotService); })
     .finally(()=>setTimeout(hideScan,900));
 });
 document.addEventListener('click',e=>{if(e.target.id==='resched-ov')closeResched();});
@@ -405,14 +413,36 @@ function renderOverview(){
   const byClinic=dashData.byClinic||{};
 
   const slotsFillable = slotsData.length || '—';
+  const scored=(s.predictedNoShows||0)+(s.mediumRisk||0)+(s.lowRisk||0);
+  const pct=n=>scored?Math.round(n/scored*100):0;
   const kpis=`
    <div class="kpis">
-     <div class="kpi neutral"><div class="lbl">Patients scanned</div><div class="v num">${s.totalAppointments}</div><div class="s">upcoming appointments</div></div>
-     <div class="kpi red"><div class="lbl">High risk</div><div class="v num">${s.predictedNoShows}</div><div class="s">${s.noShowRate}% of the book</div></div>
-     <div class="kpi amber"><div class="lbl">Medium</div><div class="v num">${s.mediumRisk}</div><div class="s">monitor</div></div>
-     <div class="kpi green"><div class="lbl">Low</div><div class="v num">${s.lowRisk}</div><div class="s">stable</div></div>
-     <div class="kpi blue"><div class="lbl">Open slots</div><div class="v num">${slotsFillable}</div><div class="s">ready to fill</div></div>
-     <div class="kpi slate"><div class="lbl">Waitlist</div><div class="v num">${s.activeWaitlist}</div><div class="s">patients waiting</div></div>
+     <div class="kpi neutral has-pop"><div class="lbl">Patients scanned</div><div class="v num">${s.totalAppointments}</div><div class="s">upcoming appointments</div>
+       <div class="kpi-pop"><div class="pk">Scoring coverage</div>
+         <div class="pr"><span>Scored</span><b>${scored}</b></div>
+         <div class="pr"><span>Not yet scored</span><b>${s.unscored}</b></div>
+         <div class="pr"><span>Total upcoming</span><b>${s.totalAppointments}</b></div></div></div>
+     <div class="kpi red has-pop"><div class="lbl">High risk</div><div class="v num">${s.predictedNoShows}</div><div class="s">${s.noShowRate}% of the book</div>
+       <div class="kpi-pop"><div class="pk">Risk bands</div>
+         <div class="pr"><span><span class="dot" style="background:#E5484D"></span>High</span><b>${s.predictedNoShows} · ${pct(s.predictedNoShows)}%</b></div>
+         <div class="pr"><span><span class="dot" style="background:#E8890C"></span>Medium</span><b>${s.mediumRisk} · ${pct(s.mediumRisk)}%</b></div>
+         <div class="pr"><span><span class="dot" style="background:#16A34A"></span>Low</span><b>${s.lowRisk} · ${pct(s.lowRisk)}%</b></div></div></div>
+     <div class="kpi amber has-pop"><div class="lbl">Medium</div><div class="v num">${s.mediumRisk}</div><div class="s">monitor</div>
+       <div class="kpi-pop"><div class="pk">What this means</div>
+         <div class="pr"><span>Medium-risk</span><b>${s.mediumRisk}</b></div>
+         <div class="pr"><span>Share of scored</span><b>${pct(s.mediumRisk)}%</b></div></div></div>
+     <div class="kpi green has-pop"><div class="lbl">Low</div><div class="v num">${s.lowRisk}</div><div class="s">stable</div>
+       <div class="kpi-pop"><div class="pk">What this means</div>
+         <div class="pr"><span>Low-risk</span><b>${s.lowRisk}</b></div>
+         <div class="pr"><span>Share of scored</span><b>${pct(s.lowRisk)}%</b></div></div></div>
+     <div class="kpi blue has-pop"><div class="lbl">Open slots</div><div class="v num">${slotsFillable}</div><div class="s">ready to fill</div>
+       <div class="kpi-pop"><div class="pk">Backfill supply</div>
+         <div class="pr"><span>Open slots loaded</span><b>${slotsFillable}</b></div>
+         <div class="pr"><span>Waitlist ready</span><b>${s.activeWaitlist}</b></div></div></div>
+     <div class="kpi slate has-pop"><div class="lbl">Waitlist</div><div class="v num">${s.activeWaitlist}</div><div class="s">patients waiting</div>
+       <div class="kpi-pop"><div class="pk">Waitlist</div>
+         <div class="pr"><span>Active patients</span><b>${s.activeWaitlist}</b></div>
+         <div class="pr"><span>Can backfill a freed slot</span><b>Yes</b></div></div></div>
    </div>`;
 
   // charts data
@@ -443,13 +473,13 @@ function renderOverview(){
         </div></div>
       </div>
       <div class="card">
-        <div class="card-h"><div><div class="card-t">Risk distribution</div><div class="card-byline">All upcoming appointments</div></div></div>
+        <div class="card-h"><div><div class="card-t">Risk distribution</div><div class="card-byline" id="donut-byline">Scored appointments</div></div></div>
         <div class="card-b"><div class="chart-wrap"><canvas id="donut"></canvas></div></div>
       </div>
     </div>
     <div class="grid2">
       <div class="card">
-        <div class="card-h"><div><div class="card-t">No-show risk by service line</div><div class="card-byline">High-risk count per service</div></div></div>
+        <div class="card-h"><div><div class="card-t">No-show risk by service line</div><div class="card-byline">High-risk rate per service · hover for counts</div></div></div>
         <div class="card-b"><div class="chart-wrap"><canvas id="svc"></canvas></div></div>
       </div>
       <div class="card">
@@ -463,25 +493,42 @@ function renderOverview(){
   renderExecInsight();
 }
 
+const FONT='-apple-system,system-ui,sans-serif';
+const TT={backgroundColor:'#0F1E2E',titleColor:'#fff',bodyColor:'#C4D0E0',padding:11,cornerRadius:8,displayColors:false,titleFont:{size:12.5,weight:'700',family:FONT},bodyFont:{size:12,family:FONT},bodySpacing:4};
+
 function drawCharts(labels,high,total,s){
+  // Service line → HIGH-RISK RATE %, sorted desc, bars get real height
   const svc=document.getElementById('svc');
   if(svc&&labels.length){
+    const rows=labels.map((l,i)=>({l,high:high[i],total:total[i],rate:total[i]?(high[i]/total[i]*100):0}))
+      .filter(r=>r.total>0).sort((a,b)=>b.rate-a.rate);
+    const L=rows.map(r=>r.l), R=rows.map(r=>+r.rate.toFixed(1));
+    const barColors=rows.map(r=>r.rate>=8?'#E5484D':r.rate>=5?'#E8890C':'#5A6B84');
     if(serviceChart)serviceChart.destroy();
-    serviceChart=new Chart(svc,{type:'bar',data:{labels,datasets:[
-      {label:'High risk',data:high,backgroundColor:'#E5484D',borderRadius:5,barPercentage:.7,categoryPercentage:.6},
-      {label:'Total',data:total,backgroundColor:'#DCE3EC',borderRadius:5,barPercentage:.7,categoryPercentage:.6}
+    serviceChart=new Chart(svc,{type:'bar',data:{labels:L,datasets:[
+      {label:'High-risk rate',data:R,backgroundColor:barColors,borderRadius:6,barPercentage:.78,categoryPercentage:.7,
+       _high:rows.map(r=>r.high),_total:rows.map(r=>r.total)}
     ]},options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top',labels:{font:{size:11.5,family:'-apple-system,system-ui,sans-serif'},color:'#647287',padding:12,boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'circle'}}},
-      scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#8A96A8',maxRotation:0,autoSkip:false,callback:function(v){const l=this.getLabelForValue(v);return l.length>10?l.slice(0,9)+'…':l;}}},
-              y:{grid:{color:'#EEF2F7'},ticks:{font:{size:11},color:'#8A96A8'}}}}});
+      plugins:{legend:{display:false},
+        tooltip:{...TT,callbacks:{
+          title:(it)=>it[0].label,
+          label:(it)=>{const ds=it.dataset;const h=ds._high[it.dataIndex],t=ds._total[it.dataIndex];return [`${it.raw}% high-risk rate`,`${h} high-risk of ${t} appointments`];}
+        }}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10,family:FONT},color:'#8A96A8',maxRotation:0,autoSkip:false,callback:function(v){const l=this.getLabelForValue(v);return l.length>11?l.slice(0,10)+'…':l;}}},
+              y:{grid:{color:'#EEF2F7'},ticks:{font:{size:11,family:FONT},color:'#8A96A8',callback:v=>v+'%'},beginAtZero:true}}}});
   }
+  // Donut → scored only (drop Unscored so colours read)
   const d=document.getElementById('donut');
   if(d){
+    const scored=(s.predictedNoShows||0)+(s.mediumRisk||0)+(s.lowRisk||0);
+    const bl=document.getElementById('donut-byline');
+    if(bl)bl.textContent=`${scored} scored · ${s.unscored||0} not yet scored`;
     if(donutChart)donutChart.destroy();
-    donutChart=new Chart(d,{type:'doughnut',data:{labels:['High','Medium','Low','Unscored'],
-      datasets:[{data:[s.predictedNoShows,s.mediumRisk,s.lowRisk,s.unscored],backgroundColor:['#E5484D','#E8890C','#16A34A','#D3DBE6'],borderWidth:0,hoverOffset:5}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'70%',
-        plugins:{legend:{position:'right',labels:{font:{size:12,family:'-apple-system,system-ui,sans-serif'},color:'#647287',padding:12,boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'circle'}}}}});
+    donutChart=new Chart(d,{type:'doughnut',data:{labels:['High','Medium','Low'],
+      datasets:[{data:[s.predictedNoShows,s.mediumRisk,s.lowRisk],backgroundColor:['#E5484D','#E8890C','#16A34A'],borderWidth:0,hoverOffset:6}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+        plugins:{legend:{position:'right',labels:{font:{size:12,family:FONT},color:'#647287',padding:13,boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'circle'}},
+          tooltip:{...TT,callbacks:{label:(it)=>{const pct=scored?((it.raw/scored)*100).toFixed(0):0;return `${it.label}: ${it.raw} (${pct}% of scored)`;}}}}}});
   }
 }
 
@@ -609,31 +656,73 @@ function fillActions(i){
   },450);
 }
 
-/* ── SLOTS ── */
-async function loadSlots(){
-  try{
-    const r=await fetch(`${API}/nova/slots/recommend`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_line:'Primary Care'})});
-    const j=await r.json(); slotsData=j.recommended_slots||[]; renderSlots();
-  }catch(e){document.getElementById('panel-slots').innerHTML=`<div class="empty">Could not load slot data.</div>`;}
+/* ── SLOTS (own service-line dropdown, defaults to busiest line) ── */
+let slotService='', slotTimeFilter='', slotServiceOptions=[];
+
+function topServiceLine(){
+  // the service line with the most at-risk patients; fall back to dashboard byService; else Primary Care
+  const c={};
+  patientsData.forEach(p=>{const k=p.service_line;if(k)c[k]=(c[k]||0)+1;});
+  let best=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
+  if(best)return best[0];
+  const bs=Object.keys(dashData?.byService||{}).filter(k=>k&&k!=='Unknown');
+  return bs[0]||'Primary Care';
 }
-function renderSlots(filter){
-  let d=[...slotsData]; if(filter)d=d.filter(s=>s.slot_type===filter);
-  const seg=['Morning','Afternoon','Evening'].map(t=>`<button class="${filter===t?'active':''}" onclick="renderSlots('${t}')">${t}</button>`).join('');
-  const segAll=`<button class="${!filter?'active':''}" onclick="renderSlots()">All</button>`;
+
+async function loadSlots(){
+  // first load defers to busiest line once patients are in; kick a default now
+  slotService = slotService || 'Primary Care';
+  await fetchSlots(slotService);
+}
+async function fetchSlots(line){
+  slotService=line;
+  document.getElementById('panel-slots')&&renderSlotsLoading();
+  try{
+    const r=await fetch(`${API}/nova/slots/recommend`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_line:line})});
+    const j=await r.json(); slotsData=j.recommended_slots||[];
+  }catch(e){slotsData=[];}
+  renderSlots();
+}
+function renderSlotsLoading(){
+  const opts=slotServiceOptionsHtml();
+  document.getElementById('panel-slots').innerHTML=slotControls(opts)+`<div class="empty">Loading ${slotService} slots…</div>`;
+}
+function slotServiceOptionsHtml(){
+  // build from dashboard byService keys (what the backend actually has)
+  if(!slotServiceOptions.length){
+    slotServiceOptions=Object.keys(dashData?.byService||{}).filter(k=>k&&k!=='Unknown');
+    if(!slotServiceOptions.length)slotServiceOptions=['Primary Care','ABA Therapy','Mental Health','Orthopaedics','Dermatology','Pain Management','IVF & Fertility'];
+  }
+  return slotServiceOptions.map(k=>`<option value="${k}" ${slotService===k?'selected':''}>${k}</option>`).join('');
+}
+function slotControls(opts){
+  const seg=['Morning','Afternoon','Evening'].map(t=>`<button class="${slotTimeFilter===t?'active':''}" onclick="setSlotTime('${t}')">${t}</button>`).join('');
+  const segAll=`<button class="${!slotTimeFilter?'active':''}" onclick="setSlotTime('')">All</button>`;
+  return `<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px">
+    <span class="lbl">Service line</span>
+    <select class="sel" id="slot-svc" onchange="fetchSlots(this.value)">${opts}</select>
+    <div class="seg" style="margin-left:auto">${seg}${segAll}</div>
+  </div>`;
+}
+function setSlotTime(t){slotTimeFilter=t;renderSlots();}
+function renderSlots(){
+  const opts=slotServiceOptionsHtml();
+  let d=[...slotsData]; if(slotTimeFilter)d=d.filter(s=>s.slot_type===slotTimeFilter);
   const cards=d.map(s=>{
     const dt=s.slot_datetime?new Date(s.slot_datetime):null;
     const dtStr=dt?dt.toLocaleDateString('en-US',{month:'short',day:'numeric',weekday:'short'})+' · '+dt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}):'—';
-    const fill=(s.predicted_fill_probability||0); const sig=fill>=0.6?'Strong':'Moderate';
-    return `<div class="mini">
+    const fill=(s.predicted_fill_probability||0); const sig=fill>=0.6?'Strong':'Moderate'; const pctF=Math.round(fill*100);
+    return `<div class="mini" title="${pctF}% predicted fill probability">
       <div class="mini-top"><div class="mini-name">${dtStr}</div><span class="signal-tag ${sig}">${sig} fill</span></div>
       <div class="mini-row">${s.service_line||'—'}</div>
       <div class="mini-row">Dr. ${s.provider_name||'—'}</div>
       <div class="mini-foot">${s.slot_type||'—'} slot</div>
     </div>`;
   }).join('');
-  document.getElementById('panel-slots').innerHTML=`
-    <div class="seg" style="margin-bottom:16px;width:fit-content">${seg}${segAll}</div>
-    ${d.length?`<div class="grid-cards">${cards}</div>`:'<div class="empty">No open slots for this filter.</div>'}`;
+  document.getElementById('panel-slots').innerHTML=
+    slotControls(opts)+
+    (d.length?`<div class="grid-cards">${cards}</div>`
+      :`<div class="empty">No open ${slotService} slots${slotTimeFilter?' in the '+slotTimeFilter.toLowerCase():''}. Try another service line or time.</div>`);
 }
 
 /* ── WAITLIST + NOVA RECS ── */
